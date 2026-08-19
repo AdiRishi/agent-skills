@@ -125,6 +125,16 @@
         "agents/openai.yaml"
       ]
     },
+    "typescript-best-practices": {
+      "origin": "vendored",
+      "source": "pstack",
+      "path": "pstack/skills/typescript-best-practices",
+      "vendoredFrom": "60c641e4fad674784b30abcf9f8915dea39df38d",
+      "modified": false,
+      "localFiles": [
+        "agents/openai.yaml"
+      ]
+    },
     "unslop": {
       "origin": "vendored",
       "source": "pstack",
