@@ -34,11 +34,13 @@ When you change a file that also exists upstream, set `modified` to `true` in th
 
 ## attribution.json
 
-One entry per folder in `skills/`. Every entry carries `origin`, `author`, and `license`.
+Top-level `harnesses` lists the agent ids every skill installs to by default. Installing reads it, so add a harness there when Adi starts using one.
 
-Any entry may carry `harnesses`, listing the agent ids the skill installs to. Leave it out when the skill suits every harness, which is the common case. `invoke-codex` has `["claude-code"]`, because a skill that drives Codex from Claude has nothing to do inside Codex.
+`skills` holds one entry per folder in `skills/`. Every entry carries `origin`, `author`, and `license`.
 
-Entries with `origin: "vendored"` add four more:
+An entry may also carry `harnesses`, which replaces the default set for that skill. Leave it out unless the skill suits some harnesses and not others. `invoke-codex` has `["claude-code"]`, because a skill that drives Codex from Claude has nothing to do inside Codex.
+
+Entries with `origin: "vendored"` add these:
 
 - `repo` and `path` locate the skill upstream.
 - `ref` is the branch to check for changes.
@@ -47,7 +49,7 @@ Entries with `origin: "vendored"` add four more:
 - `note` says what the local edit was and how to treat it on merge. Required when `modified` is `true`.
 - `localFiles` lists files added here that upstream does not have. Optional.
 
-Entries with `origin: "original"` carry none of the six. Adi wrote them.
+Entries with `origin: "original"` carry none of them. Adi wrote them.
 
 ## Add a vendored skill
 
@@ -57,7 +59,7 @@ Entries with `origin: "original"` carry none of the six. Adi wrote them.
 4. Add the entry to `attribution.json` with `modified: false`.
 5. Write `agents/openai.yaml` if upstream omitted it, and list it in `localFiles`. Skip this when `harnesses` leaves Codex out.
 6. Read the skill for links and Skill tool calls reaching outside its folder. Vendor what it depends on, or tell Adi what is missing.
-7. Add a row to the skills table in `README.md`.
+7. Add a row to the skills table in `README.md`, and add the skill to the install command that matches its harnesses.
 
 Done when the diff covers every upstream file, the skill has metadata for each harness it installs to, and every folder in `skills/` has an `attribution.json` entry.
 
@@ -75,33 +77,21 @@ Update the `README.md` row when a skill's description changes upstream.
 
 Done when every vendored entry either matches its upstream commit or has a conflict you raised.
 
-## Sync the global instruction file
-
-Codex reads `~/.codex/AGENTS.md`. Claude Code reads `~/.claude/CLAUDE.md`. Install `global/AGENTS.md` by copying it to both paths. Copy it rather than symlinking it. The installed files have to keep working on a machine where this repo is deleted, moved, or never cloned.
-
-Both destinations drift independently, so diff each one before you overwrite anything:
-
-```bash
-diff global/AGENTS.md ~/.codex/AGENTS.md
-diff global/AGENTS.md ~/.claude/CLAUDE.md
-```
-
-Act on what the diffs show:
-
-- If both print nothing, the machine is current.
-- If only the repo changed, copy `global/AGENTS.md` to both paths.
-- If a destination holds edits the repo lacks, bring them into `global/AGENTS.md` first. Commit them. Then copy back out.
-- If both sides changed, reconcile them into `global/AGENTS.md` by hand. Then copy out.
-
-Confirm with `shasum -a 256 global/AGENTS.md ~/.codex/AGENTS.md ~/.claude/CLAUDE.md`. Done when all three hashes match.
-
 ## Install on a new machine
 
-`npx skills` takes install targets as flags. It reads nothing from this repo about them, so group the skills by their `harnesses` yourself and run one command per group.
+`npx skills` clones the repo from GitHub. Confirm the local checkout matches what it will fetch, because the next step copies `global/AGENTS.md` from the local tree:
 
-`-s` and `-a` both take space-separated lists and read until the next flag.
+```bash
+git fetch origin && git rev-parse HEAD origin/main
+```
 
-Everything without a `harnesses` list goes to every harness Adi uses:
+Stop and tell Adi if the two hashes differ.
+
+Install targets come from flags. `npx skills` reads nothing from this repo about them, so group the skills yourself and run one command per group. Take the groups from `attribution.json`: top-level `harnesses` is the default set, and a skill's own `harnesses` overrides it. Rebuild the lists from that file rather than copying them from here, so a new skill is never left out.
+
+Each command needs `-g` to install for the whole machine instead of the current project, and `-y` to skip the prompts. `-s` and `-a` take space-separated lists and read until the next flag.
+
+Skills on the default set:
 
 ```bash
 npx skills@latest add AdiRishi/agent-skills -g -y \
@@ -109,15 +99,44 @@ npx skills@latest add AdiRishi/agent-skills -g -y \
   -a claude-code codex
 ```
 
-Then one command per scoped group:
+Then one command per group that overrides it:
 
 ```bash
 npx skills@latest add AdiRishi/agent-skills -g -y -s invoke-codex -a claude-code
 ```
 
-Rebuild both lists from `attribution.json` rather than copying them from here, so a new skill is never left out.
+Skills on the default set land in `~/.agents/skills/`, which every harness reads, with a symlink from each agent's own directory. A skill scoped to one harness is copied straight into that harness's directory and never appears in `~/.agents/skills/`. That is what keeps `invoke-codex` out of Codex, so check it:
 
-Then sync the global instruction file, above.
+```bash
+ls ~/.agents/skills ~/.claude/skills
+```
+
+Done when every skill in `attribution.json` appears under the harnesses its entry names, `invoke-codex` is absent from `~/.agents/skills/`, and the global instruction file is synced.
+
+Then sync the global instruction file, below.
+
+## Sync the global instruction file
+
+Codex reads `~/.codex/AGENTS.md`. Claude Code reads `~/.claude/CLAUDE.md`. Install `global/AGENTS.md` by copying it to both paths. Copy it rather than symlinking it. The installed files have to keep working on a machine where this repo is deleted, moved, or never cloned.
+
+This step reads `global/AGENTS.md` from the local clone, so run it from the repo root.
+
+The two destinations drift independently of the repo and of each other, so check each one before you overwrite it:
+
+```bash
+diff global/AGENTS.md ~/.codex/AGENTS.md
+diff global/AGENTS.md ~/.claude/CLAUDE.md
+```
+
+Handle each destination on its own result:
+
+- Missing file, which `diff` reports as `No such file or directory`. Copy `global/AGENTS.md` there. This is the normal case on a new machine.
+- No output. That destination is current. Leave it.
+- Any difference. Stop and show Adi the diff. Do not copy either way.
+
+A difference does not say which side changed, and nothing here records what was last synced. Only Adi knows whether the file was edited on this machine, so let Adi choose whether the repo or the destination wins. To keep the machine's version, bring it into `global/AGENTS.md` and commit it before copying back out.
+
+Confirm with `shasum -a 256 global/AGENTS.md ~/.codex/AGENTS.md ~/.claude/CLAUDE.md`. Done when all three hashes match.
 
 ## Writing
 

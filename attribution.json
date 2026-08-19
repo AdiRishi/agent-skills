@@ -1,4 +1,8 @@
 {
+  "harnesses": [
+    "claude-code",
+    "codex"
+  ],
   "skills": {
     "codebase-design": {
       "origin": "vendored",

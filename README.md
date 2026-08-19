@@ -8,13 +8,23 @@ One installable set of agent skills collected from several upstream repos, plus 
 
 ## Install
 
+Most skills go to every harness:
+
 ```bash
-npx skills@latest add AdiRishi/agent-skills
+npx skills@latest add AdiRishi/agent-skills -g -y \
+  -s codebase-design technical-writing unslop writing-for-agents \
+  -a claude-code codex
 ```
 
-The installer asks which skills to take and which agents to install them on, so one run covers every harness. Leave `invoke-codex` out when it asks about Codex, since it drives Codex from Claude Code and does nothing inside Codex itself.
+`invoke-codex` drives Codex from a Claude Code session, so it goes to Claude Code alone:
 
-The global instruction file installs separately, by copying. [`AGENTS.md`](./AGENTS.md) has that procedure, along with how to add a skill and how to update the vendored ones.
+```bash
+npx skills@latest add AdiRishi/agent-skills -g -y -s invoke-codex -a claude-code
+```
+
+Name the skills and harnesses as shown. A bare `npx skills add` installs everything to everything when an agent runs it, which puts `invoke-codex` on Codex.
+
+The global instruction file installs separately, by copying. [`AGENTS.md`](./AGENTS.md) covers that, and the install, update, and vendoring procedures in full.
 
 ## Skills
 
