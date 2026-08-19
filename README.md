@@ -12,7 +12,7 @@ One installable set of agent skills collected from several upstream repos, plus 
 npx skills@latest add AdiRishi/agent-skills
 ```
 
-The installer asks which skills to take and which agents to install them on. It writes to `~/.agents/skills/` and symlinks into each agent's directory, so every harness shares one copy on disk.
+The installer asks which skills to take and which agents to install them on, so one run covers every harness.
 
 The global instruction file installs separately, by copying. [`AGENTS.md`](./AGENTS.md) has that procedure, along with how to add a skill and how to update the vendored ones.
 
@@ -24,8 +24,6 @@ The global instruction file installs separately, by copying. [`AGENTS.md`](./AGE
 | [`technical-writing`](./skills/technical-writing/SKILL.md) | Diátaxis structure, Google developer style, STE instruction rules, Global English syntax | [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
 | [`unslop`](./skills/unslop/SKILL.md) | Cuts AI tells from any writing | [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
 | [`writing-for-agents`](./skills/writing-for-agents/SKILL.md) | Covers writing documents agents consume: skills, `AGENTS.md`, `CLAUDE.md` | [mattpocock/skills](https://github.com/mattpocock/skills) |
-
-Every skill here fires on its own when its description matches the work. You can also invoke any of them by name.
 
 ## Global instructions
 
