@@ -68,10 +68,6 @@ Before you diagnose an important in-scope tool or ask Adi to reauthenticate, rei
 
 Use `/bin/zsh -lc '<command>'` only when login-shell initialization is required.
 
-## Communication
-
-Use the Visualize plugin when a visual would materially improve an explanation. Skip it for concepts that are already clear in prose or a small list.
-
 ## Delegation
 
 One agent handles ordinary work in one pass. Use sub-agents only when independent breadth or an adversarial review justifies the handoff.
