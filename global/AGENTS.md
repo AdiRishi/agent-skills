@@ -1,93 +1,79 @@
-# Global Scope User Instructions
+# Global instructions
 
-I'm Adi. You are my agent. We will be working together a lot so I thought it would be worth introducing myself.
+## About Adi
 
-I'm a senior engineer Who has been working in the industry for over eight years. I have a background in fintech but I love all things software engineering.
+Adi is a senior engineer with more than eight years of industry experience and a background in fintech. He likes building complex systems with the simplest design that fits the real requirements.
 
-I love to build. I focus on building complex things as simple as possible. I love to find ways to reduce complexity when solving problems.
-
-I wanted to share some of my preferences here so we can be more aligned as we work together.
+Act once the scope is clear. Suggest a bold approach when it would materially improve the work, but keep the implementation practical.
 
 ## Writing
 
-Always keep the `unslop` skill loaded. Invoke it at the start of every session, and again after a compaction, before you write anything I will read.
+Keep the `unslop` skill loaded. Invoke it at the start of every session and after each compaction, before you write anything Adi will read.
 
-## Coding Preferences
+## Engineering
 
-### General
+### TypeScript
 
-- TypeScript is useful. Take advantage of it.
-- Don't be scared to propose bold ideas if they can meaningfully benefit our work.
-- Tests are good. Endless smoke tests, regression tests for feature deletions, etc., much less good. Tests should be focused not slop.
-- Keep comments up to date. When making changes it is important to keep things in sync.
-
-### Typescript focused
-
-- `any` is the enemy. Invert types are our friends. Our system should adapt to changes instead of requiring changes everywhere.
-- If your TS code looks like a Python dev wrote it, it is bad TS code.
-- Avoid one-liner functions that are just casting wrappers.
-- Write TypeScript in a way that Matt Pocock would be proud of.
-- If not already specified in a project, I generally like to use pnpm, React, Tailwind, and shadcn UI.
+- Use TypeScript's type system. Prefer inference and types that make downstream code adapt when a contract changes.
+- Do not use `any`.
+- Do not write one-line casting wrappers.
+- Write idiomatic TypeScript, not code translated from another language.
+- Unless a project says otherwise, prefer pnpm, React, Tailwind CSS, and shadcn/ui.
 
 ### Maintainability
 
-Long term maintainability is a core priority. If you add new functionality, first check if there is shared logic that can be extracted to a separate module. Duplicate logic across multiple files is a code smell and should be avoided. Don't be afraid to change existing code. Don't take shortcuts by just adding local logic to solve a problem.
+Long-term maintainability matters. Before you add behavior, look for existing logic that belongs in a shared module. Remove duplication when the shared rule is real, but do not create an abstraction for a hypothetical future use.
 
-Avoid backwards-compatibility hacks like renaming unused _vars, re-exporting types, adding // removed comments for removed code, etc. If you are certain that something is unused, you can delete it completely.
+Change existing code when the design calls for it. Do not solve a shared problem with isolated caller-specific logic.
 
-### Scope and Simplicity
+Delete code that is certainly unused. Do not preserve it through renamed `_variables`, obsolete re-exports, `removed` comments, feature flags, or compatibility shims.
 
-Don’t add error handling, fallbacks, or validation for scenarios that can’t happen. Trust internal code and framework guarantees. Only validate at system boundaries (user input, external APIs). Don’t use feature flags or backwards-compatibility shims when you can just change the code.
+### Scope and validation
 
-Don't design for hypothetical future requirements. Three similar lines is better than a premature abstraction. No half-finished implementations either.
+Build the complete requested behavior. Do not add unfinished paths for possible future requirements.
+
+Trust internal types and framework guarantees. Validate only at system boundaries, such as user input and external APIs. Do not add error handling or fallbacks for states that cannot occur.
+
+Prefer three similar lines over a premature abstraction. If a substantially simpler design exists, use it or explain it before continuing.
 
 ### Tests
 
-Write high-signal tests that protect durable behavior. Prefer integration-style tests through a module's public interface, using real in-process collaborators and realistic fixtures; replace only true external seams with controlled adapters. A test should describe an outcome a caller or user cares about, protect an important invariant or failure/recovery path, and remain valid after an internal refactor.
+Write focused tests that protect durable behavior. Prefer tests through a module's public interface with real in-process collaborators and realistic fixtures. Replace only true external seams with controlled adapters.
 
-Do not add tests merely to record the implementation journey. Avoid old-versus-new comparisons, tests for transient scaffolding, assertions about private helpers or internal call order, mock call-count tests, and expectations recomputed with the same logic as the implementation. When behavior changes, update or remove tests for obsolete contracts instead of preserving both histories. Before adding a test, be able to name the durable regression it would catch. Keep each test focused on one logical behavior and use independently known expected values.
+A test must protect an outcome a caller cares about, an important invariant, or a failure and recovery path. It must remain useful after an internal refactor. Before you add one, name the regression it would catch.
 
-### Code Style
+Do not add tests that record the implementation process. Avoid old-versus-new comparisons, assertions about private helpers or internal call order, mock call counts, and expected values calculated with the implementation's own logic.
 
-- Prefer concise, simple solutions over clever or heavy abstractions. Channel "YAGNI" principles .
-- If a substantially simpler approach exists, use it or surface it clearly.
-- When using TypeScript, take advantage of TypeScript's type system. Trust it. Don't check things that the type system guarantees.
-- Don't write one-line wrappers and casting functions in TypeScript. You are not a Python dev. TS should be written like TS not like Python.
+When behavior changes, update or delete tests for the obsolete contract. Keep each test focused on one logical behavior and use independently known expected values.
 
-### Code Comments
+### Comments
 
-Write code that reads like the surrounding code: match its comment density, naming, and idiom.
+Match the surrounding code's naming, idiom, and comment density. Keep public API documentation consistent with the project.
 
-Documentation comments and docstrings that define a public API contract should follow the surrounding codebase's conventions; the rules below concern explanatory implementation comments.
+Default to no implementation comments. Add one only for a reason the code cannot show, such as a hidden constraint, a subtle invariant, or a specific workaround.
 
-Default to writing no comments. Only add one when the WHY is non-obvious: a hidden constraint, a subtle invariant, a workaround for a specific bug, behavior that would surprise a reader. If removing the comment wouldn't confuse a future reader, don't write it.
+Do not narrate what the next line does. Do not mention the current task, a caller, or why the change is correct. Put that context in the commit or pull request description.
 
-Comments should capture only a constraint or non-obvious reason the code itself can't show. Never use them to say where the code came from, what the next line does, or why your change is correct; that's you talking to the reviewer, not the next reader, and it's noise the moment the PR merges.
+Keep existing comments accurate when behavior changes.
 
-Don't explain WHAT the code does, since well-named identifiers already do that. Don't reference the current task, fix, or callers ("used by X", "added for the Y flow", "handles the case from issue #123"), since those belong in the PR description and rot as the codebase evolves.
+### Commits
 
-### Commit Discipline
+Commit at meaningful, reviewable checkpoints. Keep unrelated changes separate. Use messages that describe the behavior or design change, and order commits so the history explains the implementation.
 
-Commit throughout development at meaningful, reviewable checkpoints instead of waiting until the end. Use focused messages that describe the behavior or architectural change, keep unrelated work in separate commits, and avoid vague checkpoint or catch-all commits. Order commits so the history tells the implementation story: each commit should be coherent on its own, and the sequence should make the motivation, foundations, behavior changes, and validation easy for a reviewer to follow.
+## Codex environment
 
-### Match ceremony to the task
+The Codex sandbox may restrict the network, credential stores, host services, and writes outside the workspace. A wrapper can hide these failures or return a misleading negative result.
 
-- Do not spawn sub-agents or a multi-agent panel for work. A single agent finishes in one pass. Delegation is for breadth or adversarial review not for ordinary tasks.
-- When several agents do work in parallel, state file ownership up front so they do not collide.
+Before you diagnose an important in-scope tool or ask Adi to reauthenticate, reinstall, or reconfigure it, retry the direct authoritative command with scoped escalation and a concise reason. This rule applies to GitHub CLI, package-manager `@latest` commands, React Doctor, CoreSimulator, `simctl`, and similar tools.
 
-## Instructions specific to the Codex Harness
+Use `/bin/zsh -lc '<command>'` only when login-shell initialization is required.
 
-Commands may run in a sandbox that restricts network access, credential/keychain stores, host services, and writes outside the workspace. These restrictions can produce misleading errors or be swallowed by wrappers as successful empty or negative results.
+## Communication
 
-Before diagnosing an important in-scope tool, accepting a consequential negative discovery result, or asking the user to reauthenticate, reinstall, or reconfigure it, retry the direct authoritative command with scoped escalation and a concise access justification. This applies to GitHub CLI, package-manager `@latest` commands and React Doctor, CoreSimulator/`simctl`, and similar networked or host-integrated tools.
+Use the Visualize plugin when a visual would materially improve an explanation. Skip it for concepts that are already clear in prose or a small list.
 
-Use `/bin/zsh -lc '<command>'` only when login-shell environment initialization is specifically required.
+## Delegation
 
-### Interaction Guidelines
+One agent handles ordinary work in one pass. Use sub-agents only when independent breadth or an adversarial review justifies the handoff.
 
-When explaining something to the user, look for opportunities to use the Visualize plugin. Use it whenever a visualisation would meaningfully improve understanding, and skip it only for simple concepts where it would add little or no explanatory value.
-
-### Sub-agent sizing
-
-This policy does not itself authorize delegation. When delegation is otherwise authorized and no count is specified, treat the configured limit as a ceiling and use only the minimum number justified by naturally independent workstreams. Never subdivide work merely to fill available slots.
-
+When delegation is authorized, use the fewest agents that the independent workstreams require. State file ownership before parallel edits so agents do not collide.
