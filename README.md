@@ -20,6 +20,7 @@ The global instruction file installs separately, by copying. [`AGENTS.md`](./AGE
 
 | Skill | What it does | From |
 | ----- | ------------ | ---- |
+| [`codebase-design`](./skills/codebase-design/SKILL.md) | Vocabulary for designing deep modules: interfaces, seams, testability | [mattpocock/skills](https://github.com/mattpocock/skills) |
 | [`technical-writing`](./skills/technical-writing/SKILL.md) | Diátaxis structure, Google developer style, STE instruction rules, Global English syntax | [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
 | [`unslop`](./skills/unslop/SKILL.md) | Cuts AI tells from any writing | [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
 | [`writing-for-agents`](./skills/writing-for-agents/SKILL.md) | Covers writing documents agents consume: skills, `AGENTS.md`, `CLAUDE.md` | [mattpocock/skills](https://github.com/mattpocock/skills) |

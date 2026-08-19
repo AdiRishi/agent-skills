@@ -1,5 +1,15 @@
 {
   "skills": {
+    "codebase-design": {
+      "origin": "vendored",
+      "author": "Matt Pocock",
+      "license": "MIT",
+      "repo": "https://github.com/mattpocock/skills",
+      "path": "skills/engineering/codebase-design",
+      "ref": "main",
+      "vendoredFrom": "1bb95954ef0d06ba4d64a9c267fb75f57c614a1f",
+      "modified": false
+    },
     "technical-writing": {
       "origin": "vendored",
       "author": "Lauren Tan",
