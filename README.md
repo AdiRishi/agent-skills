@@ -28,7 +28,7 @@ You invoke `technical-writing` by name. The other two also fire on their own whe
 
 [`global/AGENTS.md`](./global/AGENTS.md) is the instruction file every agent loads on every project. Codex reads it from `~/.codex/AGENTS.md` and Claude Code from `~/.claude/CLAUDE.md`.
 
-Those two paths held separate copies of the same 7406 bytes before this repo existed. Nothing watched them, so an edit to one would have gone unnoticed. They are copies again after install, because the installed file has to survive this repo being deleted. The difference is that a diff against `global/AGENTS.md` now answers which side is ahead.
+Installing copies the file to both paths instead of symlinking it, so it keeps working on a machine that does not have this repo. Copies drift, so [`AGENTS.md`](./AGENTS.md) covers how to tell which side is ahead before you overwrite either one.
 
 ## Install
 
