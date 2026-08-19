@@ -25,7 +25,7 @@ The global instruction file installs separately, by copying. [`AGENTS.md`](./AGE
 | [`unslop`](./skills/unslop/SKILL.md) | Cuts AI tells from any writing | [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
 | [`writing-for-agents`](./skills/writing-for-agents/SKILL.md) | Covers writing documents agents consume: skills, `AGENTS.md`, `CLAUDE.md` | [mattpocock/skills](https://github.com/mattpocock/skills) |
 
-You invoke `technical-writing` by name. The other two also fire on their own when their description matches the work.
+Every skill here fires on its own when its description matches the work. You can also invoke any of them by name.
 
 ## Global instructions
 

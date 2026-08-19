@@ -18,7 +18,8 @@
       "path": "pstack/skills/technical-writing",
       "ref": "main",
       "vendoredFrom": "60c641e4fad674784b30abcf9f8915dea39df38d",
-      "modified": false,
+      "modified": true,
+      "note": "disable-model-invocation removed from SKILL.md so the model can invoke it. Keep it removed on merge.",
       "localFiles": [
         "agents/openai.yaml"
       ]

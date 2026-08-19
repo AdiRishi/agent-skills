@@ -16,7 +16,11 @@ interface:
   short_description: "Write docs to a layered standard"
 ```
 
-Invocation is one decision written twice. A skill with `disable-model-invocation: true` in its frontmatter also needs `policy.allow_implicit_invocation: false` in its YAML. Write both or neither. With only the frontmatter, the model cannot reach the skill in Claude Code but still fires it in Codex.
+`short_description` runs 25 to 64 characters. Codex documents that bound.
+
+Every skill here is model-invoked, so the agent fires it when the description matches and Adi can still invoke it by name. Keep it that way. When you vendor a skill carrying `disable-model-invocation: true`, drop that line and any `policy.allow_implicit_invocation: false` beside it. Record the edit under the vendoring rules below.
+
+That pairing matters if a skill ever does need restricting. The two settings are one decision written twice, so write both or neither. With only the frontmatter, the model cannot reach the skill in Claude Code but still fires it in Codex.
 
 ## Vendored skills stay byte-identical
 
@@ -24,7 +28,7 @@ Copy upstream skills in unchanged. A byte-identical copy lets a later diff separ
 
 Adding a file upstream does not have is the exception. Metadata an upstream omits, such as `agents/openai.yaml`, is worth adding. List each added file in the skill's `localFiles` and leave `modified` alone, so updates to the upstream files stay automatic.
 
-When you change a file that also exists upstream, set `modified` to `true` in the same commit.
+When you change a file that also exists upstream, set `modified` to `true` in the same commit and write a `note` saying what changed. Read that `note` before you merge, so a later update does not undo the edit.
 
 ## attribution.json
 
@@ -36,9 +40,10 @@ Entries with `origin: "vendored"` add four more:
 - `ref` is the branch to check for changes.
 - `vendoredFrom` is the upstream commit the copy was taken at.
 - `modified` says whether any file that also exists upstream was changed here.
+- `note` says what the local edit was and how to treat it on merge. Required when `modified` is `true`.
 - `localFiles` lists files added here that upstream does not have. Optional.
 
-Entries with `origin: "original"` carry none of the five. Adi wrote them.
+Entries with `origin: "original"` carry none of the six. Adi wrote them.
 
 ## Add a vendored skill
 
@@ -96,4 +101,4 @@ Then sync the global instruction file, above.
 
 ## Writing
 
-Read `skills/technical-writing/SKILL.md` and apply it before you write or edit any document here, commit messages and PR descriptions included. Read the file directly, because that skill is user-invoked and the Skill tool cannot reach it.
+Apply `technical-writing` and `unslop` to every document here, commit messages and PR descriptions included. Both are model-invoked. When the harness has neither installed, read `skills/technical-writing/SKILL.md` and `skills/unslop/SKILL.md` from this repo instead.
