@@ -87,7 +87,7 @@
       "additionalProperties": {
         "oneOf": [
           {
-            "$ref": "#/$defs/originalSkill"
+            "$ref": "#/$defs/customSkill"
           },
           {
             "$ref": "#/$defs/vendoredSkill"
@@ -171,7 +171,7 @@
         "minLength": 1
       }
     },
-    "originalSkill": {
+    "customSkill": {
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -181,7 +181,7 @@
       ],
       "properties": {
         "origin": {
-          "const": "original"
+          "const": "custom"
         },
         "author": {
           "type": "string",

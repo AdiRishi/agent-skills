@@ -53,7 +53,7 @@ node scripts/agent-setup.mjs update
 
 The remaining files supply the declared content:
 
-- [`skills/`](./skills) contains original and vendored skills.
+- [`skills/`](./skills) contains custom and vendored skills.
 - [`global/AGENTS.md`](./global/AGENTS.md) contains Adi's global instructions.
 - [`licenses/`](./licenses) preserves the notices for vendored work.
 - [`AGENTS.md`](./AGENTS.md) tells an agent how to maintain the repository.
@@ -64,4 +64,4 @@ Installed files are outputs. Edit this repository, then run `apply`. Do not edit
 
 The repository includes work by [Lauren Tan](https://github.com/cursor/plugins/tree/main/pstack) and [Matt Pocock](https://github.com/mattpocock/skills). Their source, commit, and license records live in [`agent-setup.json`](./agent-setup.json), and their license notices live in [`licenses/`](./licenses).
 
-Adi's original skills use the repository's [MIT license](./LICENSE). Vendored files retain their upstream licenses.
+Adi's custom skills use the repository's [MIT license](./LICENSE). Vendored files retain their upstream licenses.

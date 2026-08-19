@@ -46,10 +46,10 @@ Claude Code reads the YAML frontmatter in `SKILL.md`. Codex also reads `agents/o
 
 Every skill in this repository is model-invoked. Remove `disable-model-invocation: true` and `policy.allow_implicit_invocation: false` when an upstream skill carries them. Record an edit to an upstream file with `modified: true` and a `note` in `agent-setup.json`.
 
-## Add an original skill
+## Add a custom skill
 
 1. Add `skills/<name>/SKILL.md` and its referenced files.
-2. Add an `origin: "original"` entry to `agent-setup.json`.
+2. Add an `origin: "custom"` entry to `agent-setup.json`.
 3. Add `harnesses` only when the skill does not use `defaultHarnesses`.
 4. Add `agents/openai.yaml` when the skill targets Codex.
 5. Run `node scripts/agent-setup.mjs check --repository-only` and `pnpm test`.

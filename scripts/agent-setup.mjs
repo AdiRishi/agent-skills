@@ -359,7 +359,7 @@ async function checkRepository(root) {
 					issues.push(`${name} declares missing local file ${localFile}.`);
 				}
 			}
-		} else if (skill.origin === "original") {
+		} else if (skill.origin === "custom") {
 			if (!isNonEmptyString(skill.author) || !isNonEmptyString(skill.license)) {
 				issues.push(`${name} needs an author and license.`);
 			}
