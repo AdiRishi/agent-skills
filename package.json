@@ -1,0 +1,13 @@
+{
+  "name": "@adirishi/agent-skills",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.33.4",
+  "scripts": {
+    "check": "node scripts/agent-setup.mjs check --repository-only",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

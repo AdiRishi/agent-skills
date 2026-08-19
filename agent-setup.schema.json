@@ -1,0 +1,300 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/AdiRishi/agent-skills/blob/main/agent-setup.schema.json",
+  "title": "Agent setup",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "installer",
+    "sharedSkillsDirectory",
+    "stateFile",
+    "defaultHarnesses",
+    "harnesses",
+    "requirements",
+    "globalInstructions",
+    "sources",
+    "skills"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "installer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package",
+        "version"
+      ],
+      "properties": {
+        "package": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "sharedSkillsDirectory": {
+      "$ref": "#/$defs/homePath"
+    },
+    "stateFile": {
+      "$ref": "#/$defs/homePath"
+    },
+    "defaultHarnesses": {
+      "$ref": "#/$defs/nonEmptyStringArray"
+    },
+    "harnesses": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/harness"
+      }
+    },
+    "requirements": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/requirement"
+      }
+    },
+    "globalInstructions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source"
+      ],
+      "properties": {
+        "source": {
+          "$ref": "#/$defs/repositoryPath"
+        }
+      }
+    },
+    "sources": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "skills": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/originalSkill"
+          },
+          {
+            "$ref": "#/$defs/vendoredSkill"
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command",
+        "args"
+      ],
+      "properties": {
+        "command": {
+          "type": "string",
+          "minLength": 1
+        },
+        "args": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "outputIncludes": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "harness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "installerAgent",
+        "skillsDirectory",
+        "readsSharedSkills",
+        "globalInstructions",
+        "check"
+      ],
+      "properties": {
+        "installerAgent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "skillsDirectory": {
+          "$ref": "#/$defs/homePath"
+        },
+        "readsSharedSkills": {
+          "type": "boolean"
+        },
+        "globalInstructions": {
+          "$ref": "#/$defs/homePath"
+        },
+        "check": {
+          "$ref": "#/$defs/command"
+        }
+      }
+    },
+    "homePath": {
+      "type": "string",
+      "pattern": "^~/"
+    },
+    "nonEmptyStringArray": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "originalSkill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "origin",
+        "author",
+        "license"
+      ],
+      "properties": {
+        "origin": {
+          "const": "original"
+        },
+        "author": {
+          "type": "string",
+          "minLength": 1
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1
+        },
+        "harnesses": {
+          "$ref": "#/$defs/nonEmptyStringArray"
+        }
+      }
+    },
+    "repositoryPath": {
+      "type": "string",
+      "minLength": 1,
+      "not": {
+        "pattern": "^(?:/|~/)"
+      }
+    },
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "requiredBy",
+        "check"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "requiredBy": {
+          "$ref": "#/$defs/nonEmptyStringArray"
+        },
+        "check": {
+          "$ref": "#/$defs/command"
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repo",
+        "ref",
+        "author",
+        "license",
+        "licenseFile",
+        "upstreamLicensePath"
+      ],
+      "properties": {
+        "repo": {
+          "type": "string",
+          "format": "uri"
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "author": {
+          "type": "string",
+          "minLength": 1
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1
+        },
+        "licenseFile": {
+          "$ref": "#/$defs/repositoryPath"
+        },
+        "upstreamLicensePath": {
+          "$ref": "#/$defs/repositoryPath"
+        }
+      }
+    },
+    "vendoredSkill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "origin",
+        "source",
+        "path",
+        "vendoredFrom",
+        "modified"
+      ],
+      "properties": {
+        "origin": {
+          "const": "vendored"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "$ref": "#/$defs/repositoryPath"
+        },
+        "vendoredFrom": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "modified": {
+          "type": "boolean"
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        },
+        "localFiles": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/repositoryPath"
+          }
+        },
+        "harnesses": {
+          "$ref": "#/$defs/nonEmptyStringArray"
+        }
+      }
+    }
+  }
+}

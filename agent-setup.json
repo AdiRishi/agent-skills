@@ -1,0 +1,122 @@
+{
+  "$schema": "./agent-setup.schema.json",
+  "schemaVersion": 1,
+  "installer": {
+    "package": "skills",
+    "version": "1.5.23"
+  },
+  "sharedSkillsDirectory": "~/.agents/skills",
+  "stateFile": "~/.config/agent-skills/state.json",
+  "defaultHarnesses": [
+    "claude-code",
+    "codex"
+  ],
+  "harnesses": {
+    "claude-code": {
+      "installerAgent": "claude-code",
+      "skillsDirectory": "~/.claude/skills",
+      "readsSharedSkills": false,
+      "globalInstructions": "~/.claude/CLAUDE.md",
+      "check": {
+        "command": "claude",
+        "args": [
+          "--version"
+        ]
+      }
+    },
+    "codex": {
+      "installerAgent": "codex",
+      "skillsDirectory": "~/.codex/skills",
+      "readsSharedSkills": true,
+      "globalInstructions": "~/.codex/AGENTS.md",
+      "check": {
+        "command": "codex",
+        "args": [
+          "--version"
+        ]
+      }
+    }
+  },
+  "requirements": {
+    "codex-mcp": {
+      "description": "Claude Code can reach Codex through its MCP server",
+      "requiredBy": [
+        "invoke-codex"
+      ],
+      "check": {
+        "command": "claude",
+        "args": [
+          "mcp",
+          "list"
+        ],
+        "outputIncludes": "codex:"
+      }
+    }
+  },
+  "globalInstructions": {
+    "source": "global/AGENTS.md"
+  },
+  "sources": {
+    "mattpocock-skills": {
+      "repo": "https://github.com/mattpocock/skills",
+      "ref": "main",
+      "author": "Matt Pocock",
+      "license": "MIT",
+      "licenseFile": "licenses/mattpocock-skills-MIT.txt",
+      "upstreamLicensePath": "LICENSE"
+    },
+    "pstack": {
+      "repo": "https://github.com/cursor/plugins",
+      "ref": "main",
+      "author": "Lauren Tan",
+      "license": "MIT",
+      "licenseFile": "licenses/pstack-MIT.txt",
+      "upstreamLicensePath": "pstack/LICENSE"
+    }
+  },
+  "skills": {
+    "codebase-design": {
+      "origin": "vendored",
+      "source": "mattpocock-skills",
+      "path": "skills/engineering/codebase-design",
+      "vendoredFrom": "1bb95954ef0d06ba4d64a9c267fb75f57c614a1f",
+      "modified": false
+    },
+    "invoke-codex": {
+      "origin": "original",
+      "author": "Adishwar Rishi",
+      "license": "MIT",
+      "harnesses": [
+        "claude-code"
+      ]
+    },
+    "technical-writing": {
+      "origin": "vendored",
+      "source": "pstack",
+      "path": "pstack/skills/technical-writing",
+      "vendoredFrom": "60c641e4fad674784b30abcf9f8915dea39df38d",
+      "modified": true,
+      "note": "Removed disable-model-invocation from SKILL.md so the model can invoke it. Keep it removed during an update.",
+      "localFiles": [
+        "agents/openai.yaml"
+      ]
+    },
+    "unslop": {
+      "origin": "vendored",
+      "source": "pstack",
+      "path": "pstack/skills/unslop",
+      "vendoredFrom": "60c641e4fad674784b30abcf9f8915dea39df38d",
+      "modified": false,
+      "localFiles": [
+        "agents/openai.yaml"
+      ]
+    },
+    "writing-for-agents": {
+      "origin": "vendored",
+      "source": "mattpocock-skills",
+      "path": "skills/productivity/writing-for-agents",
+      "vendoredFrom": "1bb95954ef0d06ba4d64a9c267fb75f57c614a1f",
+      "modified": false
+    }
+  }
+}

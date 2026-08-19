@@ -2,53 +2,66 @@
   <img src="docs/assets/agent-skills-icon-128.png" width="96" alt="Agent Skills">
 </p>
 
-# Agent skills
+# Agent setup
 
-One installable set of agent skills collected from several upstream repos, plus the global instruction file my agents load on every project.
+This repository defines the skills and global instructions that Adi's coding agents use. It can inspect a Mac, apply the declared setup, and update skills copied from upstream repositories.
 
-## Install
+## Set up a Mac
 
-Most skills go to every harness:
-
-```bash
-npx skills@latest add AdiRishi/agent-skills -g -y \
-  -s codebase-design technical-writing unslop writing-for-agents \
-  -a claude-code codex
-```
-
-`invoke-codex` drives Codex from a Claude Code session, so it goes to Claude Code alone:
+Clone the repository, then apply the current checkout:
 
 ```bash
-npx skills@latest add AdiRishi/agent-skills -g -y -s invoke-codex -a claude-code
+git clone https://github.com/AdiRishi/agent-skills
+cd agent-skills
+node scripts/agent-setup.mjs apply
 ```
 
-Name the skills and harnesses as shown. A bare `npx skills add` installs everything to everything when an agent runs it, which puts `invoke-codex` on Codex.
+`apply` installs each skill into its declared harness, copies the global instruction file, removes misplaced managed skills, and checks the result. It does not store credentials or complete an interactive sign-in.
 
-The global instruction file installs separately, by copying. [`AGENTS.md`](./AGENTS.md) covers that, and the install, update, and vendoring procedures in full.
+Run the machine check again at any time:
 
-## Skills
+```bash
+node scripts/agent-setup.mjs check --machine
+```
 
-| Skill | What it does | From |
-| ----- | ------------ | ---- |
-| [`codebase-design`](./skills/codebase-design/SKILL.md) | Vocabulary for designing deep modules: interfaces, seams, testability | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| [`invoke-codex`](./skills/invoke-codex/SKILL.md) | Delegates work to Codex from a Claude Code session. Claude Code only, and needs the Codex MCP server | Mine |
-| [`technical-writing`](./skills/technical-writing/SKILL.md) | Diátaxis structure, Google developer style, STE instruction rules, Global English syntax | [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
-| [`unslop`](./skills/unslop/SKILL.md) | Cuts AI tells from any writing | [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
-| [`writing-for-agents`](./skills/writing-for-agents/SKILL.md) | Covers writing documents agents consume: skills, `AGENTS.md`, `CLAUDE.md` | [mattpocock/skills](https://github.com/mattpocock/skills) |
+## Work with the repository
 
-## Global instructions
+The setup command has three operations:
 
-[`global/AGENTS.md`](./global/AGENTS.md) is the instruction file every agent loads on every project. Codex reads it from `~/.codex/AGENTS.md`, Claude Code from `~/.claude/CLAUDE.md`.
+```bash
+# Validate repository structure and metadata.
+node scripts/agent-setup.mjs check --repository-only
 
-## Credit
+# Make this Mac match the current checkout.
+node scripts/agent-setup.mjs apply
 
-Most of these skills are not mine.
+# Fetch and merge every vendored skill from its declared upstream.
+node scripts/agent-setup.mjs update
+```
 
-- [pstack](https://github.com/cursor/plugins/tree/main/pstack), by Lauren Tan, MIT
-- [mattpocock/skills](https://github.com/mattpocock/skills), by Matt Pocock, MIT
+`apply --dry-run` prints the install and copy operations. `update --dry-run` fetches upstream repositories and reports what would change.
 
-[`attribution.json`](./attribution.json) records the author, license, upstream path, and upstream commit for every skill here.
+## What the repository owns
 
-## License
+[`agent-setup.json`](./agent-setup.json) is the source of truth. It declares:
 
-MIT for the skills I wrote. Vendored skills keep their original licenses, recorded per skill in [`attribution.json`](./attribution.json).
+- the supported harnesses and their instruction paths
+- each skill's installation targets
+- the pinned `skills` installer version
+- required integrations, including the Codex MCP server used by `invoke-codex`
+- upstream repositories, commits, local files, and merge notes
+
+The remaining files supply the declared content:
+
+- [`skills/`](./skills) contains original and vendored skills.
+- [`global/AGENTS.md`](./global/AGENTS.md) contains Adi's global instructions.
+- [`licenses/`](./licenses) preserves the notices for vendored work.
+- [`AGENTS.md`](./AGENTS.md) tells an agent how to maintain the repository.
+
+Installed files are outputs. Edit this repository, then run `apply`. Do not edit the copies under `~/.agents`, `~/.claude`, or `~/.codex` and expect the repository to import them.
+
+## Credit and license
+
+The repository includes work by [Lauren Tan](https://github.com/cursor/plugins/tree/main/pstack) and [Matt Pocock](https://github.com/mattpocock/skills). Their source, commit, and license records live in [`agent-setup.json`](./agent-setup.json), and their license notices live in [`licenses/`](./licenses).
+
+Adi's original skills use the repository's [MIT license](./LICENSE). Vendored files retain their upstream licenses.
