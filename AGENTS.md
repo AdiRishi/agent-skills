@@ -4,9 +4,11 @@
 
 Every skill is one folder directly under `skills/`, holding `SKILL.md` plus any files it links to. Keep the tree flat.
 
-## Every skill carries metadata for both harnesses
+## Every skill carries metadata for the harnesses it installs to
 
 Claude Code reads the YAML frontmatter in `SKILL.md`. Codex reads `agents/openai.yaml` beside it. A skill needs both, and upstreams vary in how much they ship.
+
+A skill scoped to one harness is the exception. It needs metadata only for the harnesses in its `harnesses` list, so a Claude Code skill ships `SKILL.md` alone.
 
 `agents/openai.yaml` holds the Codex picker entry:
 
@@ -34,6 +36,8 @@ When you change a file that also exists upstream, set `modified` to `true` in th
 
 One entry per folder in `skills/`. Every entry carries `origin`, `author`, and `license`.
 
+Any entry may carry `harnesses`, listing the agent ids the skill installs to. Leave it out when the skill suits every harness, which is the common case. `invoke-codex` has `["claude-code"]`, because a skill that drives Codex from Claude has nothing to do inside Codex.
+
 Entries with `origin: "vendored"` add four more:
 
 - `repo` and `path` locate the skill upstream.
@@ -51,11 +55,11 @@ Entries with `origin: "original"` carry none of the six. Adi wrote them.
 2. Copy the skill folder to `skills/<name>/`.
 3. Run `diff -r <upstream-folder> skills/<name>` and confirm it prints nothing.
 4. Add the entry to `attribution.json` with `modified: false`.
-5. Write `agents/openai.yaml` if upstream omitted it, and list it in `localFiles`.
+5. Write `agents/openai.yaml` if upstream omitted it, and list it in `localFiles`. Skip this when `harnesses` leaves Codex out.
 6. Read the skill for links and Skill tool calls reaching outside its folder. Vendor what it depends on, or tell Adi what is missing.
 7. Add a row to the skills table in `README.md`.
 
-Done when the diff covers every upstream file, the skill has both harnesses' metadata, and every folder in `skills/` has an `attribution.json` entry.
+Done when the diff covers every upstream file, the skill has metadata for each harness it installs to, and every folder in `skills/` has an `attribution.json` entry.
 
 ## Update vendored skills
 
@@ -93,9 +97,25 @@ Confirm with `shasum -a 256 global/AGENTS.md ~/.codex/AGENTS.md ~/.claude/CLAUDE
 
 ## Install on a new machine
 
+`npx skills` takes install targets as flags. It reads nothing from this repo about them, so group the skills by their `harnesses` yourself and run one command per group.
+
+`-s` and `-a` both take space-separated lists and read until the next flag.
+
+Everything without a `harnesses` list goes to every harness Adi uses:
+
 ```bash
-npx skills@latest add AdiRishi/agent-skills
+npx skills@latest add AdiRishi/agent-skills -g -y \
+  -s codebase-design technical-writing unslop writing-for-agents \
+  -a claude-code codex
 ```
+
+Then one command per scoped group:
+
+```bash
+npx skills@latest add AdiRishi/agent-skills -g -y -s invoke-codex -a claude-code
+```
+
+Rebuild both lists from `attribution.json` rather than copying them from here, so a new skill is never left out.
 
 Then sync the global instruction file, above.
 

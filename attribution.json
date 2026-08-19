@@ -10,6 +10,14 @@
       "vendoredFrom": "1bb95954ef0d06ba4d64a9c267fb75f57c614a1f",
       "modified": false
     },
+    "invoke-codex": {
+      "origin": "original",
+      "author": "Adishwar Rishi",
+      "license": "MIT",
+      "harnesses": [
+        "claude-code"
+      ]
+    },
     "technical-writing": {
       "origin": "vendored",
       "author": "Lauren Tan",

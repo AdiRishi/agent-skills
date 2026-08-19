@@ -12,7 +12,7 @@ One installable set of agent skills collected from several upstream repos, plus 
 npx skills@latest add AdiRishi/agent-skills
 ```
 
-The installer asks which skills to take and which agents to install them on, so one run covers every harness.
+The installer asks which skills to take and which agents to install them on, so one run covers every harness. Leave `invoke-codex` out when it asks about Codex, since it drives Codex from Claude Code and does nothing inside Codex itself.
 
 The global instruction file installs separately, by copying. [`AGENTS.md`](./AGENTS.md) has that procedure, along with how to add a skill and how to update the vendored ones.
 
@@ -21,6 +21,7 @@ The global instruction file installs separately, by copying. [`AGENTS.md`](./AGE
 | Skill | What it does | From |
 | ----- | ------------ | ---- |
 | [`codebase-design`](./skills/codebase-design/SKILL.md) | Vocabulary for designing deep modules: interfaces, seams, testability | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| [`invoke-codex`](./skills/invoke-codex/SKILL.md) | Delegates work to Codex from a Claude Code session. Claude Code only, and needs the Codex MCP server | Mine |
 | [`technical-writing`](./skills/technical-writing/SKILL.md) | Diátaxis structure, Google developer style, STE instruction rules, Global English syntax | [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
 | [`unslop`](./skills/unslop/SKILL.md) | Cuts AI tells from any writing | [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
 | [`writing-for-agents`](./skills/writing-for-agents/SKILL.md) | Covers writing documents agents consume: skills, `AGENTS.md`, `CLAUDE.md` | [mattpocock/skills](https://github.com/mattpocock/skills) |
