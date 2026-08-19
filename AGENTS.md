@@ -34,7 +34,7 @@ node scripts/agent-setup.mjs update
 
 Use `--dry-run` with `apply` or `update` to inspect planned work. Run `pnpm test` after you change the setup command.
 
-`apply` treats the repository as authoritative. It may replace managed skill directories and global instruction files. It does not manage credentials. If a harness or integration check still fails, fix it when the user's request authorizes that change. Otherwise, return the exact blocker.
+`apply` treats the repository as authoritative. It may replace managed skill directories and global instruction files. It also repairs requirements that declare an `apply` command. It does not manage credentials. If a harness or integration check still fails, fix it when the user's request authorizes that change. Otherwise, return the exact blocker.
 
 `update` compares Git trees at each skill's `path`. It replaces unmodified upstream files exactly, preserves declared `localFiles`, and merges declared modifications against the new upstream tree. If a merge conflicts, the command leaves this repository unchanged and prints the temporary merge path. Stop and ask Adi how to resolve the conflict.
 

@@ -16,7 +16,7 @@ cd agent-skills
 node scripts/agent-setup.mjs apply
 ```
 
-`apply` installs each skill into its declared harness, copies the global instruction file, removes misplaced managed skills, and checks the result. It does not store credentials or complete an interactive sign-in.
+`apply` installs each skill into its declared harness, repairs declared integrations, copies the global instruction file, removes misplaced managed skills, and checks the result. It does not store credentials or complete an interactive sign-in.
 
 Run the machine check again at any time:
 

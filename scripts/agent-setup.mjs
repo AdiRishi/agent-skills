@@ -216,6 +216,14 @@ function validateCommand(check, label, issues) {
 	if (!check || !isNonEmptyString(check.command) || !Array.isArray(check.args)) {
 		issues.push(`${label} needs a command and an args array.`);
 	}
+	if (
+		check?.outputIncludes !== undefined &&
+		(!Array.isArray(check.outputIncludes) ||
+			check.outputIncludes.length === 0 ||
+			check.outputIncludes.some((value) => !isNonEmptyString(value)))
+	) {
+		issues.push(`${label}.outputIncludes must be a non-empty string array.`);
+	}
 }
 
 async function checkRepository(root) {
@@ -372,6 +380,9 @@ async function checkRepository(root) {
 			}
 		}
 		validateCommand(requirement.check, `requirements.${name}.check`, issues);
+		if (requirement.apply) {
+			validateCommand(requirement.apply, `requirements.${name}.apply`, issues);
+		}
 	}
 
 	const claudeInstructions = join(root, "CLAUDE.md");
@@ -474,8 +485,10 @@ function expectedSkillLocations(manifest, name, skill, home) {
 async function checkCommand(check, label) {
 	const result = run(check.command, check.args, { timeout: 30_000 });
 	if (!result.ok) return `${label} failed: ${result.output.trim() || "command not found"}`;
-	if (check.outputIncludes && !result.output.includes(check.outputIncludes)) {
-		return `${label} output does not include ${JSON.stringify(check.outputIncludes)}.`;
+	for (const expected of check.outputIncludes ?? []) {
+		if (!result.output.includes(expected)) {
+			return `${label} output does not include ${JSON.stringify(expected)}.`;
+		}
 	}
 	return undefined;
 }
@@ -604,6 +617,18 @@ async function applySetup(root, home, manifest, rawManifest, dryRun) {
 		];
 		console.log(`RUN ${formatCommand("npx", args)}`);
 		if (!dryRun) runOrFail("npx", args, { cwd: root, inherit: true, timeout: 300_000 });
+	}
+	for (const [name, requirement] of Object.entries(manifest.requirements)) {
+		const issue = await checkCommand(requirement.check, `${name} check`);
+		if (!issue || !requirement.apply) continue;
+		console.log(`RUN ${formatCommand(requirement.apply.command, requirement.apply.args)}`);
+		if (!dryRun) {
+			runOrFail(requirement.apply.command, requirement.apply.args, {
+				cwd: root,
+				inherit: true,
+				timeout: 120_000,
+			});
+		}
 	}
 
 	const roots = managedSkillRoots(manifest, home);

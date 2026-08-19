@@ -47,9 +47,28 @@
         "command": "claude",
         "args": [
           "mcp",
-          "list"
+          "get",
+          "codex"
         ],
-        "outputIncludes": "codex:"
+        "outputIncludes": [
+          "Status: ✔ Connected",
+          "Command: codex",
+          "Args: mcp-server",
+          "Scope: User config"
+        ]
+      },
+      "apply": {
+        "command": "claude",
+        "args": [
+          "mcp",
+          "add",
+          "--scope",
+          "user",
+          "codex",
+          "--",
+          "codex",
+          "mcp-server"
+        ]
       }
     }
   },

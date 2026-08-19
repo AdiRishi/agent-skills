@@ -123,7 +123,7 @@ async function createFixture(t, options = {}) {
 				skillsDirectory: "~/.claude/skills",
 				readsSharedSkills: false,
 				globalInstructions: "~/.claude/CLAUDE.md",
-				check: { command: process.execPath, args: ["--version"] },
+				check: { command: process.execPath, args: ["--version"], outputIncludes: ["v"] },
 			},
 		},
 		requirements: {},
@@ -203,6 +203,29 @@ test("update mirrors upstream, preserves local files, and merges declared change
 	assert.equal(manifest.skills.custom.modified, true);
 	assert.equal(git(setup, "status", "--porcelain", "--", "skills/plain/OBSOLETE.md").length > 0, true);
 	assert.match(result.stdout, /PASS updated repository/u);
+});
+
+test("apply plans a declared repair when a requirement check fails", async (t) => {
+	const { setup } = await createFixture(t);
+	const manifestPath = join(setup, "agent-setup.json");
+	const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+	manifest.requirements.fixture = {
+		description: "A repairable fixture requirement",
+		requiredBy: ["plain"],
+		check: {
+			command: process.execPath,
+			args: ["-e", "process.exit(1)"],
+		},
+		apply: {
+			command: process.execPath,
+			args: ["-e", "console.log('repair fixture')"],
+		},
+	};
+	await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+
+	const result = runSetup(setup, "apply", "--dry-run", "--home", join(setup, "home"));
+	assert.equal(result.status, 0, `${result.stdout}${result.stderr}`);
+	assert.match(result.stdout, /repair fixture/u);
 });
 
 test("an update conflict leaves the repository unchanged", async (t) => {
