@@ -38,11 +38,10 @@ A `.claude-plugin/` manifest is planned so the set can also be installed as a Cl
 
 ```
 skills/
-  <category>/
-    <skill-name>/
-      SKILL.md              # the skill itself, plus Claude Code frontmatter
-      agents/openai.yaml    # Codex metadata
-      *.md                  # supporting references the skill links to
+  <skill-name>/
+    SKILL.md                # the skill itself, plus Claude Code frontmatter
+    agents/openai.yaml      # Codex metadata, when the skill has it
+    *.md                    # supporting references the skill links to
 global/
   AGENTS.md                 # global user instructions, shared by every harness
   README.md                 # how to install them on a machine
@@ -53,7 +52,17 @@ attribution.json            # where every skill came from
 docs/assets/                # icon
 ```
 
-Both reference repos nest skills under category folders and `npx skills` walks the tree recursively, so categories cost nothing at install time. They earn their keep as a staging area: a skill can live here without being listed in `plugin.json`, which keeps half-finished work out of the shipped set.
+`skills/` is flat. Matt's repo sorts into category folders and pstack keeps one directory with `principle-` name prefixes, but sorting is only worth its cost once there is enough here to get lost in. Skill names are unique across the whole set either way, since that is what an agent invokes.
+
+## Skills
+
+| Skill | What it does | From |
+| ----- | ------------ | ---- |
+| [`technical-writing`](./skills/technical-writing/SKILL.md) | Diátaxis structure, Google developer style, STE instruction rules for docs, RFCs, readmes, commit messages | [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
+| [`unslop`](./skills/unslop/SKILL.md) | Cut AI tells from any writing | [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
+| [`writing-for-agents`](./skills/writing-for-agents/SKILL.md) | Write documents agents consume: skills, `AGENTS.md`, `CLAUDE.md` | [mattpocock/skills](https://github.com/mattpocock/skills) |
+
+`technical-writing` is user-invoked. The other two can fire on their own when the description matches.
 
 ## Global instructions
 

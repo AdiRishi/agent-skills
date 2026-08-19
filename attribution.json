@@ -1,0 +1,34 @@
+{
+  "skills": {
+    "technical-writing": {
+      "origin": "vendored",
+      "author": "Lauren Tan",
+      "license": "MIT",
+      "repo": "https://github.com/cursor/plugins",
+      "path": "pstack/skills/technical-writing",
+      "ref": "main",
+      "vendoredFrom": "60c641e4fad674784b30abcf9f8915dea39df38d",
+      "modified": false
+    },
+    "unslop": {
+      "origin": "vendored",
+      "author": "Lauren Tan",
+      "license": "MIT",
+      "repo": "https://github.com/cursor/plugins",
+      "path": "pstack/skills/unslop",
+      "ref": "main",
+      "vendoredFrom": "60c641e4fad674784b30abcf9f8915dea39df38d",
+      "modified": false
+    },
+    "writing-for-agents": {
+      "origin": "vendored",
+      "author": "Matt Pocock",
+      "license": "MIT",
+      "repo": "https://github.com/mattpocock/skills",
+      "path": "skills/productivity/writing-for-agents",
+      "ref": "main",
+      "vendoredFrom": "1bb95954ef0d06ba4d64a9c267fb75f57c614a1f",
+      "modified": false
+    }
+  }
+}
