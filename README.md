@@ -43,6 +43,9 @@ skills/
       SKILL.md              # the skill itself, plus Claude Code frontmatter
       agents/openai.yaml    # Codex metadata
       *.md                  # supporting references the skill links to
+global/
+  AGENTS.md                 # global user instructions, shared by every harness
+  README.md                 # how to install them on a machine
 attribution.json            # where every skill came from
 .claude-plugin/
   plugin.json               # the skills this repo ships as a plugin
@@ -51,6 +54,12 @@ docs/assets/                # icon
 ```
 
 Both reference repos nest skills under category folders and `npx skills` walks the tree recursively, so categories cost nothing at install time. They earn their keep as a staging area: a skill can live here without being listed in `plugin.json`, which keeps half-finished work out of the shipped set.
+
+## Global instructions
+
+Skills are half the setup. The other half is the global instruction file every agent loads on every project, which lives in [`global/AGENTS.md`](./global/AGENTS.md).
+
+Codex reads it from `~/.codex/AGENTS.md` and Claude Code from `~/.claude/CLAUDE.md`. Before it lived here those were two independent copies of the same 7406 bytes, with nothing to catch a divergence. [`global/README.md`](./global/README.md) has the install steps, which symlink both paths at the one file.
 
 ## How a skill is built
 
