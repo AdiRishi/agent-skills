@@ -8,38 +8,41 @@ It is not this repo's own instruction file. Nothing in it is specific to working
 
 Two harnesses read it, each from its own path:
 
-| Harness     | Path                 |
-| ----------- | -------------------- |
-| Codex       | `~/.codex/AGENTS.md` |
+| Harness     | Path                  |
+| ----------- | --------------------- |
+| Codex       | `~/.codex/AGENTS.md`  |
 | Claude Code | `~/.claude/CLAUDE.md` |
 
-Symlink both to this file rather than copying it:
+Copy the file to both. Do not symlink. The installed copies have to keep working after this repo is deleted, moved, or never cloned again on that machine, and a symlink would leave both harnesses pointing at nothing.
 
 ```bash
-REPO="$(git rev-parse --show-toplevel)"
 mkdir -p ~/.codex ~/.claude
-ln -sfn "$REPO/global/AGENTS.md" ~/.codex/AGENTS.md
-ln -sfn "$REPO/global/AGENTS.md" ~/.claude/CLAUDE.md
+cp global/AGENTS.md ~/.codex/AGENTS.md
+cp global/AGENTS.md ~/.claude/CLAUDE.md
 ```
 
-Symlinks are what make this worth doing. Copies drift, and drift is the problem this repo exists to solve. Both paths held identical copies before this file existed, and nothing would have caught it if one had been edited. With symlinks, `git pull` updates both harnesses at once, and an edit made through either path lands in the repo as an uncommitted change you can review and commit.
+## Updating an existing install
 
-`npx skills` already installs this way, symlinking each agent's skill directory to one folder under `~/.agents/skills/`. This matches that.
-
-## If a path is already a real file
-
-`ln -sfn` will overwrite it without asking. Check first, because an existing file may hold edits that were never committed here:
+Copies drift, so check before overwriting. Both destinations may have been edited in place, and an edit made on a machine is worth keeping.
 
 ```bash
-diff ~/.claude/CLAUDE.md global/AGENTS.md
+diff global/AGENTS.md ~/.codex/AGENTS.md
+diff global/AGENTS.md ~/.claude/CLAUDE.md
 ```
 
-If it differs, the local copy is ahead. Bring the changes into `global/AGENTS.md`, commit them, and then symlink.
+What the result means:
+
+- **No output from both.** Everything is current. Nothing to do.
+- **Only the repo has changed.** Copy over the installed files.
+- **An installed file has changes the repo lacks.** The machine is ahead. Bring those edits into `global/AGENTS.md` and commit them, then copy back out so both harnesses match.
+- **Both sides changed.** Reconcile by hand into `global/AGENTS.md`, then copy out. Do not overwrite either side blind.
+
+The two installed paths can also differ from each other, since nothing keeps them in step. Diff both separately rather than checking one and assuming the other matches.
 
 ## Verifying
 
 ```bash
-ls -l ~/.codex/AGENTS.md ~/.claude/CLAUDE.md
+shasum -a 256 global/AGENTS.md ~/.codex/AGENTS.md ~/.claude/CLAUDE.md
 ```
 
-Both should print as symlinks pointing into this repo. If either shows as a regular file, something replaced the link. Editing through a harness UI that rewrites the file in place can do this, so re-check after any tool edits your global memory.
+Three matching hashes means the machine is in sync with the repo.

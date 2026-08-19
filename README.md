@@ -59,7 +59,9 @@ Both reference repos nest skills under category folders and `npx skills` walks t
 
 Skills are half the setup. The other half is the global instruction file every agent loads on every project, which lives in [`global/AGENTS.md`](./global/AGENTS.md).
 
-Codex reads it from `~/.codex/AGENTS.md` and Claude Code from `~/.claude/CLAUDE.md`. Before it lived here those were two independent copies of the same 7406 bytes, with nothing to catch a divergence. [`global/README.md`](./global/README.md) has the install steps, which symlink both paths at the one file.
+Codex reads it from `~/.codex/AGENTS.md` and Claude Code from `~/.claude/CLAUDE.md`. Before it lived here those were two independent copies of the same 7406 bytes, with nothing to catch a divergence.
+
+Installing it copies the file to both paths. It is deliberately not symlinked, because the installed copies have to survive this repo being deleted or never cloned on that machine. The cost is that syncing is a step someone has to run, so [`global/README.md`](./global/README.md) covers how to tell which side is ahead before overwriting anything.
 
 ## How a skill is built
 
