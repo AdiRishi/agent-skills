@@ -1,29 +1,20 @@
 # Working in this repo
 
-This repo holds agent skills collected from several upstreams, plus the global instruction file every agent loads. It is the one source a machine installs from.
-
 ## Layout
 
-```
-skills/<name>/SKILL.md    the skill, with Claude Code frontmatter
-skills/<name>/agents/openai.yaml    Codex metadata, when the skill has it
-global/AGENTS.md          the global instruction file, installed to two paths
-attribution.json          where each skill came from
-```
-
-`skills/` is flat. Skill names are unique across the set, because the name is what an agent invokes.
+Every skill is one folder directly under `skills/`, holding `SKILL.md` plus any files it links to. Keep the tree flat.
 
 ## Vendored skills stay byte-identical
 
-Copy each upstream skill in unchanged. A byte-identical copy lets a later diff separate an upstream change from a local edit. Once you edit a vendored file, every future update becomes a merge you have to judge by hand.
+Copy upstream skills in unchanged. A byte-identical copy lets a later diff separate an upstream change from a local edit. Once you edit a vendored file, every future update becomes a merge you judge by hand.
 
-To change a vendored skill, set its `modified` field to `true` in `attribution.json` in the same commit.
+When you do change a vendored skill, set its `modified` field to `true` in the same commit.
 
 ## attribution.json
 
 One entry per folder in `skills/`. Every entry carries `origin`, `author`, and `license`.
 
-Entries with `origin: "vendored"` add four fields:
+Entries with `origin: "vendored"` add four more:
 
 - `repo` and `path` locate the skill upstream.
 - `ref` is the branch to check for changes.
@@ -31,8 +22,6 @@ Entries with `origin: "vendored"` add four fields:
 - `modified` says whether the local copy still matches upstream at that commit.
 
 Entries with `origin: "original"` carry none of the four. Adi wrote them.
-
-`vendoredFrom` is what makes an update precise. It lets you ask what changed in `path` between that commit and now, instead of overwriting and hoping.
 
 ## Add a vendored skill
 
@@ -59,9 +48,7 @@ Done when every vendored entry either matches its upstream commit or has a confl
 
 ## Sync the global instruction file
 
-Codex reads `~/.codex/AGENTS.md`. Claude Code reads `~/.claude/CLAUDE.md`. Install `global/AGENTS.md` by copying it to both paths.
-
-Copy it. Do not symlink it. The installed files have to keep working on a machine where this repo is deleted, moved, or never cloned.
+Codex reads `~/.codex/AGENTS.md`. Claude Code reads `~/.claude/CLAUDE.md`. Install `global/AGENTS.md` by copying it to both paths. Copy it rather than symlinking it. The installed files have to keep working on a machine where this repo is deleted, moved, or never cloned.
 
 Both destinations drift independently, so diff each one before you overwrite anything:
 
@@ -85,8 +72,8 @@ Confirm with `shasum -a 256 global/AGENTS.md ~/.codex/AGENTS.md ~/.claude/CLAUDE
 npx skills@latest add AdiRishi/agent-skills
 ```
 
-Then follow **Sync the global instruction file** above.
+Then sync the global instruction file, above.
 
 ## Writing
 
-Apply the `technical-writing` and `unslop` skills to every document here, including commit messages and PR descriptions.
+Read `skills/technical-writing/SKILL.md` and apply it before you write or edit any document here, commit messages and PR descriptions included. Read the file directly, because that skill is user-invoked and the Skill tool cannot reach it.
