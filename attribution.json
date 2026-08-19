@@ -18,7 +18,10 @@
       "path": "pstack/skills/technical-writing",
       "ref": "main",
       "vendoredFrom": "60c641e4fad674784b30abcf9f8915dea39df38d",
-      "modified": false
+      "modified": false,
+      "localFiles": [
+        "agents/openai.yaml"
+      ]
     },
     "unslop": {
       "origin": "vendored",
@@ -28,7 +31,10 @@
       "path": "pstack/skills/unslop",
       "ref": "main",
       "vendoredFrom": "60c641e4fad674784b30abcf9f8915dea39df38d",
-      "modified": false
+      "modified": false,
+      "localFiles": [
+        "agents/openai.yaml"
+      ]
     },
     "writing-for-agents": {
       "origin": "vendored",
