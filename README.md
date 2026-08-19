@@ -4,19 +4,31 @@
 
 # Agent skills
 
-Every agent skill I use, in one repository, with each one credited to whoever wrote it.
+Every agent skill I use, in one repository, credited to whoever wrote it.
 
 ## Why this exists
 
-I install skills with [`npx skills`](https://skills.sh), and the part it gets right is bookkeeping. It hashes each skill folder and records the repo, ref, and path it came from, so it knows when an installed copy has drifted from its source.
+I install skills with [`npx skills`](https://skills.sh), and the bookkeeping is the part it gets right. It hashes each skill folder and records the repo, ref, and path the skill came from. It knows when an installed copy has drifted from its source.
 
-What it does not fix is fragmentation. My skills come from several repos on different release cadences, and getting a new machine to match an old one meant replaying install commands in the right order and trusting my memory for the list. The lock file that makes any single skill trackable lives in `~/.agents/.skill-lock.json`, which is per-machine state. It cannot be committed and shared.
+Fragmentation is the part it cannot fix. My skills come from several repos on different release cadences. Matching a new machine to an old one meant replaying install commands in the right order, and trusting my memory for the list. The lock file that tracks all of it sits at `~/.agents/.skill-lock.json`. That is per-machine state. You cannot commit it and share it.
 
-So this repo becomes the one upstream. Skills are collected here, attributed, and installed from a single source. Syncing a machine is one command, and updating a borrowed skill is a job I can hand to an agent.
+So this repo is the one upstream. Skills are collected here, credited, and installed from a single source. A machine syncs with one command, and updating a borrowed skill is a job I hand to an agent.
 
-## Status
+## Skills
 
-Early. The structure below is the target. Skills are still being pulled in, so expect the tree to fill out before the install commands are worth running.
+| Skill | What it does | From |
+| ----- | ------------ | ---- |
+| [`technical-writing`](./skills/technical-writing/SKILL.md) | Diátaxis structure, Google developer style, STE instruction rules, Global English syntax | [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
+| [`unslop`](./skills/unslop/SKILL.md) | Cuts AI tells from any writing | [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
+| [`writing-for-agents`](./skills/writing-for-agents/SKILL.md) | Covers writing documents agents consume: skills, `AGENTS.md`, `CLAUDE.md` | [mattpocock/skills](https://github.com/mattpocock/skills) |
+
+You invoke `technical-writing` by name. The other two also fire on their own when their description matches the work.
+
+## Global instructions
+
+[`global/AGENTS.md`](./global/AGENTS.md) is the instruction file every agent loads on every project. Codex reads it from `~/.codex/AGENTS.md` and Claude Code from `~/.claude/CLAUDE.md`.
+
+Those two paths held separate copies of the same 7406 bytes before this repo existed. Nothing watched them, so an edit to one would have gone unnoticed. They are copies again after install, because the installed file has to survive this repo being deleted. The difference is that a diff against `global/AGENTS.md` now answers which side is ahead.
 
 ## Install
 
@@ -24,127 +36,21 @@ Early. The structure below is the target. Skills are still being pulled in, so e
 npx skills@latest add AdiRishi/agent-skills
 ```
 
-The installer asks which skills to take and which agents to install them on. It writes to `~/.agents/skills/` and symlinks into each agent's directory, so Claude Code, Codex, Cursor, and the rest share one copy on disk.
+The installer asks which skills to take and which agents to install them on. It writes to `~/.agents/skills/` and symlinks into each agent's directory, so every harness shares one copy on disk.
 
-To pull later changes:
+The global instruction file installs separately. [`AGENTS.md`](./AGENTS.md) has that procedure, along with how to update a vendored skill and how to add a new one.
 
-```bash
-npx skills@latest update
-```
+## Credit
 
-A `.claude-plugin/` manifest is planned so the set can also be installed as a Claude Code plugin. That route is read-only and updates on `git pull`, which suits machines I do not want to hand-edit skills on.
+Most of these skills are not mine.
 
-## Layout
-
-```
-skills/
-  <skill-name>/
-    SKILL.md                # the skill itself, plus Claude Code frontmatter
-    agents/openai.yaml      # Codex metadata, when the skill has it
-    *.md                    # supporting references the skill links to
-global/
-  AGENTS.md                 # global user instructions, shared by every harness
-  README.md                 # how to install them on a machine
-attribution.json            # where every skill came from
-.claude-plugin/
-  plugin.json               # the skills this repo ships as a plugin
-  marketplace.json          # makes the repo its own single-plugin marketplace
-docs/assets/                # icon
-```
-
-`skills/` is flat. Matt's repo sorts into category folders and pstack keeps one directory with `principle-` name prefixes, but sorting is only worth its cost once there is enough here to get lost in. Skill names are unique across the whole set either way, since that is what an agent invokes.
-
-## Skills
-
-| Skill | What it does | From |
-| ----- | ------------ | ---- |
-| [`technical-writing`](./skills/technical-writing/SKILL.md) | Diátaxis structure, Google developer style, STE instruction rules for docs, RFCs, readmes, commit messages | [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
-| [`unslop`](./skills/unslop/SKILL.md) | Cut AI tells from any writing | [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
-| [`writing-for-agents`](./skills/writing-for-agents/SKILL.md) | Write documents agents consume: skills, `AGENTS.md`, `CLAUDE.md` | [mattpocock/skills](https://github.com/mattpocock/skills) |
-
-`technical-writing` is user-invoked. The other two can fire on their own when the description matches.
-
-## Global instructions
-
-Skills are half the setup. The other half is the global instruction file every agent loads on every project, which lives in [`global/AGENTS.md`](./global/AGENTS.md).
-
-Codex reads it from `~/.codex/AGENTS.md` and Claude Code from `~/.claude/CLAUDE.md`. Before it lived here those were two independent copies of the same 7406 bytes, with nothing to catch a divergence.
-
-Installing it copies the file to both paths. It is deliberately not symlinked, because the installed copies have to survive this repo being deleted or never cloned on that machine. The cost is that syncing is a step someone has to run, so [`global/README.md`](./global/README.md) covers how to tell which side is ahead before overwriting anything.
-
-## How a skill is built
-
-Claude Code and Codex read different files, so a skill that works properly in both carries two pieces of metadata.
-
-Claude Code reads YAML frontmatter at the top of `SKILL.md`:
-
-```yaml
----
-name: unslop
-description: Cut AI tells from any writing. Must always apply.
-disable-model-invocation: true # optional, see below
----
-```
-
-Codex reads `agents/openai.yaml` beside it:
-
-```yaml
-interface:
-  display_name: "Unslop"
-  short_description: "Cut AI tells from any writing"
-policy:
-  allow_implicit_invocation: false # optional, see below
-```
-
-The one axis that matters is who can invoke a skill. A model-invoked skill fires on its own when the description matches what is happening, so its `description` carries trigger phrasing. A user-invoked skill runs only when I type its name, which takes `disable-model-invocation: true` in the frontmatter and `policy.allow_implicit_invocation: false` in the YAML. Those two settings are one decision expressed twice. A skill is user-invoked in both harnesses or in neither.
-
-## Attribution
-
-Most of these skills are not mine. `attribution.json` records where each one came from, and it is the file an agent reads when I ask it to update everything.
-
-```json
-{
-  "skills": {
-    "unslop": {
-      "origin": "vendored",
-      "author": "Lauren Tan",
-      "license": "MIT",
-      "repo": "https://github.com/cursor/plugins",
-      "path": "pstack/skills/unslop",
-      "ref": "main",
-      "vendoredFrom": "a1b2c3d4e5f6...",
-      "modified": false
-    }
-  }
-}
-```
-
-`origin` is `vendored` for anything copied from elsewhere and `original` for skills I wrote, which carry no `repo`, `path`, `ref`, or `vendoredFrom`.
-
-`vendoredFrom` is the field that makes updates precise. It pins the exact upstream commit a skill was copied at, so an agent can ask what changed in that path between then and now instead of blindly overwriting. `modified` says whether my copy is still byte-identical to upstream at that commit.
-
-Keeping vendored skills unmodified is worth the discipline. Once a local edit lands, a plain diff against upstream can no longer separate my change from theirs, and every future update becomes a judgment call.
-
-## Updating
-
-The workflow this is built for is telling an agent to go update my skills. For each entry in `attribution.json` where `origin` is `vendored`:
-
-1. Fetch the upstream repo at `ref` and read the current commit for `path`.
-2. If it matches `vendoredFrom`, the skill is current. Move on.
-3. If `modified` is `false`, copy the new version in and update `vendoredFrom`.
-4. If `modified` is `true`, three-way merge: upstream at `vendoredFrom`, upstream now, and my copy. Clean merges apply. Conflicts stop and ask.
-
-Step 4 is the default I want, and it is the only step with a real choice in it. The alternatives are always discarding my edits or always keeping them, and both throw away information the merge can use.
-
-After any skill is added, renamed, or removed, `.claude-plugin/plugin.json` needs the same change. The plugin ships exactly what that array lists.
-
-## Sources
-
-- [cursor/plugins](https://github.com/cursor/plugins/tree/main/pstack/skills) (pstack), by Lauren Tan, MIT
+- [pstack](https://github.com/cursor/plugins/tree/main/pstack), by Lauren Tan, MIT
 - [mattpocock/skills](https://github.com/mattpocock/skills), by Matt Pocock, MIT
 
-Both are worth reading in full. Skills taken from them keep their attribution in `attribution.json`, and their MIT terms travel with the files.
+Both repos hold far more than I have taken, and both are worth reading in full.
+
+[`attribution.json`](./attribution.json) records the author, license, upstream path, and exact upstream commit for every skill here. It is the file an agent reads when I ask it to update everything.
 
 ## License
 
-MIT, for the skills I wrote. Vendored skills stay under their original licenses, recorded per skill in `attribution.json`.
+MIT for the skills I wrote. Vendored skills keep their original licenses, recorded per skill in [`attribution.json`](./attribution.json).
