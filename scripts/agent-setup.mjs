@@ -191,9 +191,31 @@ async function markdownFiles(root) {
 	return files;
 }
 
+function withoutFencedCode(markdown) {
+	let fence;
+	return markdown
+		.split(/\r?\n/u)
+		.map((line) => {
+			const marker = line.match(/^ {0,3}(`{3,}|~{3,})/u)?.[1];
+			if (!fence && marker) {
+				fence = { character: marker[0], length: marker.length };
+				return "";
+			}
+			if (!fence) return line;
+
+			const closesFence =
+				marker?.[0] === fence.character &&
+				marker.length >= fence.length &&
+				line.slice(line.indexOf(marker) + marker.length).trim().length === 0;
+			if (closesFence) fence = undefined;
+			return "";
+		})
+		.join("\n");
+}
+
 async function checkMarkdownLinks(root, issues) {
 	for (const file of await markdownFiles(root)) {
-		const content = await readFile(file, "utf8");
+		const content = withoutFencedCode(await readFile(file, "utf8"));
 		for (const match of content.matchAll(/\]\(([^)]+)\)/gu)) {
 			const target = match[1].replace(/^<|>$/gu, "").split("#", 1)[0];
 			if (!target || /^(?:[a-z]+:|#|\$|\/)/iu.test(target)) continue;
@@ -314,12 +336,26 @@ async function checkRepository(root) {
 
 		const document = await readFile(skillDocumentPath, "utf8");
 		const frontmatter = parseFrontmatter(document);
+		const allowsModelInvocation = skill.allowModelInvocation ?? true;
 		if (frontmatter.name !== name) {
 			issues.push(`${name}/SKILL.md declares name ${frontmatter.name ?? "<missing>"}.`);
 		}
 		if (!frontmatter.description) issues.push(`${name}/SKILL.md has no description.`);
-		if (/^disable-model-invocation:\s*true$/mu.test(frontmatter.block)) {
-			issues.push(`${name} disables model invocation.`);
+		if (
+			skill.allowModelInvocation !== undefined &&
+			typeof skill.allowModelInvocation !== "boolean"
+		) {
+			issues.push(`${name}.allowModelInvocation must be a boolean.`);
+		}
+		const disablesModelInvocation = /^disable-model-invocation:\s*true$/mu.test(
+			frontmatter.block,
+		);
+		if (allowsModelInvocation === disablesModelInvocation) {
+			issues.push(
+				allowsModelInvocation
+					? `${name} disables model invocation but the manifest allows it.`
+					: `${name} allows model invocation but the manifest disables it.`,
+			);
 		}
 
 		const harnesses = skillHarnesses(manifest, skill);
@@ -339,8 +375,15 @@ async function checkRepository(root) {
 			if (!shortDescription || shortDescription.length < 25 || shortDescription.length > 64) {
 				issues.push(`${name} has a Codex short_description outside 25 to 64 characters.`);
 			}
-			if (/allow_implicit_invocation:\s*false/mu.test(metadata)) {
-				issues.push(`${name} disables implicit invocation in agents/openai.yaml.`);
+			const disablesImplicitInvocation = /allow_implicit_invocation:\s*false/mu.test(
+				metadata,
+			);
+			if (targetsCodex && allowsModelInvocation === disablesImplicitInvocation) {
+				issues.push(
+					allowsModelInvocation
+						? `${name} disables implicit Codex invocation but the manifest allows it.`
+						: `${name} allows implicit Codex invocation but the manifest disables it.`,
+				);
 			}
 		}
 
@@ -748,6 +791,7 @@ async function prepareMerge(base, upstream, local, localFiles, tempRoot) {
 	git(["init", "--quiet"], mergeRoot);
 	git(["config", "user.name", "agent-setup"], mergeRoot);
 	git(["config", "user.email", "agent-setup@localhost"], mergeRoot);
+	git(["config", "commit.gpgSign", "false"], mergeRoot);
 	await replaceWorktree(base, mergeRoot);
 	git(["add", "--all"], mergeRoot);
 	git(["commit", "--quiet", "--allow-empty", "-m", "base"], mergeRoot);

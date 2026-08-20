@@ -37,6 +37,7 @@ async function initializeGitRepository(root) {
 	git(root, "init", "--quiet", "--initial-branch=main");
 	git(root, "config", "user.name", "Agent Setup Test");
 	git(root, "config", "user.email", "agent-setup-test@localhost");
+	git(root, "config", "commit.gpgSign", "false");
 }
 
 async function commit(root, message) {
@@ -53,6 +54,10 @@ description: A plain fixture skill used to test exact vendored updates.
 # Plain
 
 ${body}
+
+~~~markdown
+[A fenced placeholder link](link)
+~~~
 `;
 
 const customSkill = (localLine, upstreamLine) => `---
@@ -180,6 +185,80 @@ test("the checked-in repository satisfies its setup contract", () => {
 	const result = runSetup(repositoryRoot, "check", "--repository-only");
 	assert.equal(result.status, 0, result.stderr);
 	assert.match(result.stdout, /PASS repository/u);
+});
+
+test("check accepts declared user invocation and detects metadata drift", async (t) => {
+	const { setup } = await createFixture(t);
+	const manifestPath = join(setup, "agent-setup.json");
+	const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+	manifest.harnesses.codex = {
+		installerAgent: "codex",
+		skillsDirectory: "~/.codex/skills",
+		readsSharedSkills: true,
+		globalInstructions: "~/.codex/AGENTS.md",
+		check: { command: process.execPath, args: ["--version"] },
+	};
+	manifest.skills.explicit = {
+		origin: "custom",
+		author: "Fixture",
+		license: "Test",
+		harnesses: ["claude-code", "codex"],
+		allowModelInvocation: false,
+	};
+	await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+	await write(
+		join(setup, "skills", "explicit", "SKILL.md"),
+		`---
+name: explicit
+description: A fixture skill available only when the user invokes it by name.
+disable-model-invocation: true
+---
+`,
+	);
+	const openaiMetadataPath = join(setup, "skills", "explicit", "agents", "openai.yaml");
+	await write(
+		openaiMetadataPath,
+		`interface:
+  short_description: "Run the explicit fixture skill by name"
+policy:
+  allow_implicit_invocation: false
+`,
+	);
+
+	const valid = runSetup(setup, "check", "--repository-only");
+	assert.equal(valid.status, 0, `${valid.stdout}${valid.stderr}`);
+
+	await write(
+		openaiMetadataPath,
+		`interface:
+  short_description: "Run the explicit fixture skill by name"
+policy:
+  allow_implicit_invocation: true
+`,
+	);
+	const codexDrift = runSetup(setup, "check", "--repository-only");
+	assert.notEqual(codexDrift.status, 0);
+	assert.match(codexDrift.stderr, /allows implicit Codex invocation/u);
+
+	await write(
+		openaiMetadataPath,
+		`interface:
+  short_description: "Run the explicit fixture skill by name"
+policy:
+  allow_implicit_invocation: false
+`,
+	);
+	await write(
+		join(setup, "skills", "explicit", "SKILL.md"),
+		`---
+name: explicit
+description: A fixture skill available only when the user invokes it by name.
+---
+`,
+	);
+	const claudeDrift = runSetup(setup, "check", "--repository-only");
+	assert.notEqual(claudeDrift.status, 0);
+	assert.match(claudeDrift.stderr, /allows model invocation/u);
 });
 
 test("update mirrors upstream, preserves local files, and merges declared changes", async (t) => {

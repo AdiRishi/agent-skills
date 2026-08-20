@@ -193,6 +193,9 @@
         },
         "harnesses": {
           "$ref": "#/$defs/nonEmptyStringArray"
+        },
+        "allowModelInvocation": {
+          "type": "boolean"
         }
       }
     },
@@ -301,6 +304,9 @@
         },
         "harnesses": {
           "$ref": "#/$defs/nonEmptyStringArray"
+        },
+        "allowModelInvocation": {
+          "type": "boolean"
         }
       }
     }

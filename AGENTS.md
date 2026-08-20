@@ -44,7 +44,7 @@ Every skill is one folder directly under `skills/`. Keep the tree flat. A folder
 
 Claude Code reads the YAML frontmatter in `SKILL.md`. Codex also reads `agents/openai.yaml`. Add that file when the skill targets Codex. `short_description` must contain 25 to 64 characters.
 
-Every skill in this repository is model-invoked. Remove `disable-model-invocation: true` and `policy.allow_implicit_invocation: false` when an upstream skill carries them. Record an edit to an upstream file with `modified: true` and a `note` in `agent-setup.json`.
+Skills are model-invoked by default. Set `allowModelInvocation: false` in `agent-setup.json` only when Adi wants a skill invoked by name. Such a skill must set `disable-model-invocation: true` in `SKILL.md` and `policy.allow_implicit_invocation: false` in `agents/openai.yaml`. For other skills, remove those settings when an upstream skill carries them, then record the edit with `modified: true` and a `note` in `agent-setup.json`.
 
 ## Add a custom skill
 
