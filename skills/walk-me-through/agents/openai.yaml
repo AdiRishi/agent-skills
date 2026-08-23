@@ -1,0 +1,5 @@
+interface:
+  display_name: "Walk me through"
+  short_description: "Explain produced work so it reads on the first pass"
+policy:
+  allow_implicit_invocation: false

@@ -197,6 +197,12 @@
       "vendoredFrom": "1bb95954ef0d06ba4d64a9c267fb75f57c614a1f",
       "modified": false
     },
+    "walk-me-through": {
+      "origin": "custom",
+      "author": "Adishwar Rishi",
+      "license": "MIT",
+      "allowModelInvocation": false
+    },
     "wayfinder": {
       "origin": "vendored",
       "source": "mattpocock-skills",
