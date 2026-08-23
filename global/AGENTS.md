@@ -60,14 +60,6 @@ Keep existing comments accurate when behavior changes.
 
 Commit at meaningful, reviewable checkpoints. Keep unrelated changes separate. Use messages that describe the behavior or design change, and order commits so the history explains the implementation.
 
-## Codex environment
-
-The Codex sandbox may restrict the network, credential stores, host services, and writes outside the workspace. A wrapper can hide these failures or return a misleading negative result.
-
-Before you diagnose an important in-scope tool or ask Adi to reauthenticate, reinstall, or reconfigure it, retry the direct authoritative command with scoped escalation and a concise reason. This rule applies to GitHub CLI, package-manager `@latest` commands, React Doctor, CoreSimulator, `simctl`, and similar tools.
-
-Use `/bin/zsh -lc '<command>'` only when login-shell initialization is required.
-
 ## Delegation
 
 One agent handles ordinary work in one pass. Use sub-agents only when independent breadth or an adversarial review justifies the handoff.

@@ -38,6 +38,12 @@ Use `--dry-run` with `apply` or `update` to inspect planned work. Run `pnpm test
 
 `update` compares Git trees at each skill's `path`. It replaces unmodified upstream files exactly, preserves declared `localFiles`, and merges declared modifications against the new upstream tree. If a merge conflicts, the command leaves this repository unchanged and prints the temporary merge path. Stop and ask Adi how to resolve the conflict.
 
+## Edit the global instructions
+
+`apply` writes each harness's instruction file from [`global/AGENTS.md`](./global/AGENTS.md) plus the harness section declared in `globalInstructions.harnessSections`. It trims each part and joins them with one blank line.
+
+Keep a rule in `global/AGENTS.md` when every harness follows it. Move it to the harness section, such as [`global/codex.md`](./global/codex.md), when it describes one harness's environment, tools, or vocabulary. Give a harness its first section by adding the file and declaring its path under `globalInstructions.harnessSections`.
+
 ## Keep each skill complete
 
 Every skill is one folder directly under `skills/`. Keep the tree flat. A folder contains `SKILL.md` and every file that the skill links to.

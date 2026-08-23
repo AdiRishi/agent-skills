@@ -73,7 +73,10 @@
     }
   },
   "globalInstructions": {
-    "source": "global/AGENTS.md"
+    "source": "global/AGENTS.md",
+    "harnessSections": {
+      "codex": "global/codex.md"
+    }
   },
   "sources": {
     "mattpocock-skills": {

@@ -54,7 +54,7 @@ node scripts/agent-setup.mjs update
 The remaining files supply the declared content:
 
 - [`skills/`](./skills) contains custom and vendored skills.
-- [`global/AGENTS.md`](./global/AGENTS.md) contains Adi's global instructions.
+- [`global/AGENTS.md`](./global/AGENTS.md) contains the global instructions every harness receives, and [`global/codex.md`](./global/codex.md) contains the section only Codex receives.
 - [`licenses/`](./licenses) preserves the notices for vendored work.
 - [`AGENTS.md`](./AGENTS.md) tells an agent how to maintain the repository.
 
