@@ -72,6 +72,12 @@
       "properties": {
         "source": {
           "$ref": "#/$defs/repositoryPath"
+        },
+        "harnessSections": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/repositoryPath"
+          }
         }
       }
     },

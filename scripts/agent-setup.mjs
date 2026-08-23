@@ -297,6 +297,17 @@ async function checkRepository(root) {
 		issues.push(`Global instruction source does not exist: ${globalSource}.`);
 	}
 
+	for (const [name, path] of Object.entries(manifest.globalInstructions?.harnessSections ?? {})) {
+		if (!harnessNames.has(name)) {
+			issues.push(`globalInstructions.harnessSections names unknown harness ${name}.`);
+		}
+		if (!isNonEmptyString(path)) {
+			issues.push(`globalInstructions.harnessSections.${name} must be set.`);
+		} else if (!(await pathExists(repositoryPath(root, path)))) {
+			issues.push(`Global instruction section does not exist: ${path}.`);
+		}
+	}
+
 	const sources = manifest.sources ?? {};
 	for (const [name, source] of Object.entries(sources)) {
 		for (const key of [
@@ -496,10 +507,25 @@ async function compareDirectories(expected, actual, exclusions = []) {
 	return differences.sort();
 }
 
+function globalInstructionSources(manifest, harnessName) {
+	const section = manifest.globalInstructions.harnessSections?.[harnessName];
+	return section ? [manifest.globalInstructions.source, section] : [manifest.globalInstructions.source];
+}
+
+async function composeGlobalInstructions(root, manifest, harnessName) {
+	const parts = await Promise.all(
+		globalInstructionSources(manifest, harnessName).map(async (path) =>
+			(await readFile(repositoryPath(root, path), "utf8")).trim(),
+		),
+	);
+	return `${parts.join("\n\n")}\n`;
+}
+
 async function sourceHash(root, rawManifest, manifest) {
 	const hash = createHash("sha256").update(rawManifest);
-	const globalPath = repositoryPath(root, manifest.globalInstructions.source);
-	hash.update(await readFile(globalPath));
+	for (const name of Object.keys(manifest.harnesses).sort()) {
+		hash.update(await composeGlobalInstructions(root, manifest, name));
+	}
 	for (const name of Object.keys(manifest.skills).sort()) {
 		for (const [path, value] of await directoryEntries(join(root, "skills", name))) {
 			hash.update(name).update(path).update(value);
@@ -547,13 +573,17 @@ async function checkMachine(root, home, manifest, rawManifest) {
 		if (issue) issues.push(issue);
 	}
 
-	const globalSource = repositoryPath(root, manifest.globalInstructions.source);
 	for (const [name, harness] of Object.entries(manifest.harnesses)) {
 		const destination = expandHome(harness.globalInstructions, home);
 		if (!(await pathExists(destination))) {
 			issues.push(`${name} global instructions are missing at ${destination}.`);
-		} else if ((await readFile(globalSource)).compare(await readFile(destination)) !== 0) {
-			issues.push(`${name} global instructions differ from ${manifest.globalInstructions.source}.`);
+		} else if (
+			(await readFile(destination, "utf8")) !==
+			(await composeGlobalInstructions(root, manifest, name))
+		) {
+			issues.push(
+				`${name} global instructions differ from ${globalInstructionSources(manifest, name).join(" and ")}.`,
+			);
 		}
 	}
 
@@ -704,13 +734,12 @@ async function applySetup(root, home, manifest, rawManifest, dryRun) {
 		if (!dryRun) await rm(location, { recursive: true, force: true });
 	}
 
-	const globalSource = repositoryPath(root, manifest.globalInstructions.source);
-	for (const harness of Object.values(manifest.harnesses)) {
+	for (const [name, harness] of Object.entries(manifest.harnesses)) {
 		const destination = expandHome(harness.globalInstructions, home);
-		console.log(`COPY ${globalSource} -> ${destination}`);
+		console.log(`WRITE ${globalInstructionSources(manifest, name).join(" + ")} -> ${destination}`);
 		if (!dryRun) {
 			await mkdir(dirname(destination), { recursive: true });
-			await cp(globalSource, destination);
+			await writeFile(destination, await composeGlobalInstructions(root, manifest, name));
 		}
 	}
 

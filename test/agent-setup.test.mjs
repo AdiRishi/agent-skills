@@ -326,3 +326,43 @@ test("an update conflict leaves the repository unchanged", async (t) => {
 		}
 	}
 });
+
+test("each harness receives only its own global instruction sections", async (t) => {
+	const { setup } = await createFixture(t);
+	const home = join(setup, "home");
+	const manifestPath = join(setup, "agent-setup.json");
+	const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+	manifest.harnesses.codex = {
+		installerAgent: "codex",
+		skillsDirectory: "~/.codex/skills",
+		readsSharedSkills: true,
+		globalInstructions: "~/.codex/AGENTS.md",
+		check: { command: process.execPath, args: ["--version"] },
+	};
+	manifest.globalInstructions.harnessSections = { codex: "global/codex.md" };
+	await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+	await write(join(setup, "global", "codex.md"), "## Codex environment\n\nSandbox rules.\n");
+	await write(join(home, ".claude", "CLAUDE.md"), "# Global\n");
+	await write(join(home, ".codex", "AGENTS.md"), "# Global\n\n## Codex environment\n\nSandbox rules.\n");
+
+	const matching = runSetup(setup, "check", "--machine", "--home", home);
+	assert.doesNotMatch(`${matching.stdout}${matching.stderr}`, /global instructions/u);
+
+	await write(join(home, ".claude", "CLAUDE.md"), "# Global\n\n## Codex environment\n\nSandbox rules.\n");
+	const leaked = runSetup(setup, "check", "--machine", "--home", home);
+	assert.match(leaked.stderr, /claude-code global instructions differ from global\/AGENTS\.md\./u);
+});
+
+
+test("check reports a global instruction section that names an unknown harness", async (t) => {
+	const { setup } = await createFixture(t);
+	const manifestPath = join(setup, "agent-setup.json");
+	const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+	manifest.globalInstructions.harnessSections = { codex: "global/codex.md" };
+	await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+	await write(join(setup, "global", "codex.md"), "## Codex environment\n");
+
+	const result = runSetup(setup, "check", "--repository-only");
+	assert.notEqual(result.status, 0);
+	assert.match(result.stderr, /unknown harness codex/u);
+});
