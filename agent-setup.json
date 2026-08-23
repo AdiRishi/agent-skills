@@ -124,16 +124,6 @@
         "claude-code"
       ]
     },
-    "research": {
-      "origin": "vendored",
-      "source": "mattpocock-skills",
-      "path": "skills/engineering/research",
-      "vendoredFrom": "885e2ca4d842d139e9aef4e48d366c63cb1b8013",
-      "modified": false,
-      "localFiles": [
-        "agents/openai.yaml"
-      ]
-    },
     "technical-writing": {
       "origin": "vendored",
       "source": "pstack",
