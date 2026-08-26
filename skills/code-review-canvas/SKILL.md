@@ -17,6 +17,8 @@ Build a canvas that presents a local branch diff reorganized for reviewer compre
 
 Read `~/.cursor/skills-cursor/canvas/SKILL.md` first. It contains the generation policy, design guidance, slop rules, self-check, and file-path conventions you must follow. The full component and hook surface is declared in `~/.cursor/skills-cursor/canvas/sdk/index.d.ts` and its sibling `.d.ts` files — read them to discover exact exports and prop shapes rather than guessing.
 
+Apply the **technical-writing** and **unslop** skills to all copy in the final canvas.
+
 ## Gather the diff
 
 Diff the current working tree against the repository's default branch (from `refs/remotes/origin/HEAD`; do not assume `main` or `master`). Use `git diff --find-renames $(git merge-base <default-branch> HEAD)` to collect every file's path, additions, deletions, and hunks.
