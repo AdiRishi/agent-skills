@@ -707,8 +707,11 @@ async function applySetup(root, home, manifest, rawManifest, dryRun) {
 	const roots = managedSkillRoots(manifest, home);
 	const desiredLocations = new Set();
 	for (const [name, skill] of Object.entries(manifest.skills)) {
+		const source = join(root, "skills", name);
 		for (const location of expectedSkillLocations(manifest, name, skill, home)) {
 			desiredLocations.add(location);
+			console.log(`COPY ${source} -> ${location}`);
+			if (!dryRun) await replaceDirectory(source, location);
 		}
 	}
 	const statePath = expandHome(manifest.stateFile, home);

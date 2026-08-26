@@ -284,6 +284,43 @@ test("update mirrors upstream, preserves local files, and merges declared change
 	assert.match(result.stdout, /PASS updated repository/u);
 });
 
+test("apply copies a cursor-only skill into the Cursor skills directory", async (t) => {
+	const { setup } = await createFixture(t);
+	const home = join(setup, "home");
+	const manifestPath = join(setup, "agent-setup.json");
+	const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+	manifest.harnesses.cursor = {
+		installerAgent: "cursor",
+		skillsDirectory: "~/.cursor/skills",
+		readsSharedSkills: true,
+		globalInstructions: "~/.cursor/AGENTS.md",
+		check: { command: process.execPath, args: ["--version"] },
+	};
+	manifest.skills.cursorOnly = {
+		origin: "custom",
+		author: "Fixture",
+		license: "Test",
+		harnesses: ["cursor"],
+	};
+	await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+	await write(
+		join(setup, "skills", "cursorOnly", "SKILL.md"),
+		`---
+name: cursorOnly
+description: A fixture skill installed only for Cursor.
+---
+`,
+	);
+
+	const result = runSetup(setup, "apply", "--dry-run", "--home", home);
+	assert.equal(result.status, 0, `${result.stdout}${result.stderr}`);
+	assert.match(
+		result.stdout,
+		/COPY .+\/skills\/cursorOnly -> .+\/\.cursor\/skills\/cursorOnly/u,
+	);
+	assert.doesNotMatch(result.stdout, /COPY .+\/skills\/cursorOnly -> .+\/\.agents\/skills\/cursorOnly/u);
+});
+
 test("apply plans a declared repair when a requirement check fails", async (t) => {
 	const { setup } = await createFixture(t);
 	const manifestPath = join(setup, "agent-setup.json");

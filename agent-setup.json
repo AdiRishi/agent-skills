@@ -106,9 +106,29 @@
       "license": "MIT",
       "licenseFile": "licenses/pstack-MIT.txt",
       "upstreamLicensePath": "pstack/LICENSE"
+    },
+    "pr-review-canvas": {
+      "repo": "https://github.com/cursor/plugins",
+      "ref": "main",
+      "author": "Cursor",
+      "license": "MIT",
+      "licenseFile": "licenses/pr-review-canvas-MIT.txt",
+      "upstreamLicensePath": "pr-review-canvas/LICENSE"
     }
   },
   "skills": {
+    "code-review-canvas": {
+      "origin": "vendored",
+      "source": "pr-review-canvas",
+      "path": "pr-review-canvas/skills/pr-review-canvas",
+      "vendoredFrom": "bdf7aa355337897f167153e05069aca505dae17c",
+      "modified": true,
+      "note": "Renamed the skill from pr-review-canvas to code-review-canvas, and set disable-model-invocation so it runs only when named. Keep both during an update.",
+      "harnesses": [
+        "cursor"
+      ],
+      "allowModelInvocation": false
+    },
     "codebase-design": {
       "origin": "vendored",
       "source": "mattpocock-skills",

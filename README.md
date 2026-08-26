@@ -62,6 +62,6 @@ Installed files are outputs. Edit this repository, then run `apply`. Do not edit
 
 ## Credit and license
 
-The repository includes work by [Lauren Tan](https://github.com/cursor/plugins/tree/main/pstack) and [Matt Pocock](https://github.com/mattpocock/skills). Their source, commit, and license records live in [`agent-setup.json`](./agent-setup.json), and their license notices live in [`licenses/`](./licenses).
+The repository includes work by [Lauren Tan](https://github.com/cursor/plugins/tree/main/pstack), [Matt Pocock](https://github.com/mattpocock/skills), and [Cursor](https://github.com/cursor/plugins/tree/main/pr-review-canvas). Their source, commit, and license records live in [`agent-setup.json`](./agent-setup.json), and their license notices live in [`licenses/`](./licenses).
 
 Adi's custom skills use the repository's [MIT license](./LICENSE). Vendored files retain their upstream licenses.
