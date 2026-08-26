@@ -1,17 +1,17 @@
 ---
 name: code-review-canvas
 description: >-
-  Render a PR diff review as a Cursor Canvas that groups changes by
+  Render a local branch diff review as a Cursor Canvas that groups changes by
   reviewer importance, separates boilerplate from core logic, and
-  highlights tricky or unexpected code. Use when reviewing a pull
-  request, summarizing a diff for review, or when the user asks for a
-  PR review canvas, diff walkthrough, or change-set overview.
+  highlights tricky or unexpected code. Use when reviewing the current
+  branch against the default branch, summarizing a diff for review, or when
+  the user asks for a code review canvas, diff walkthrough, or change-set overview.
 disable-model-invocation: true
 ---
 
-# PR Review Canvas
+# Code Review Canvas
 
-Build a canvas that presents a PR diff reorganized for reviewer comprehension — not in file-tree order.
+Build a canvas that presents a local branch diff reorganized for reviewer comprehension — not in file-tree order.
 
 ## Prerequisites
 
@@ -19,9 +19,9 @@ Read `~/.cursor/skills-cursor/canvas/SKILL.md` first. It contains the generation
 
 ## Gather the diff
 
-Expect a GitHub PR link (a full URL like `https://github.com/<owner>/<repo>/pull/<n>`, or an equivalent `gh`-resolvable reference). Use `gh pr diff <pr>` to collect every file's path, additions, deletions, and hunks.
+Diff the current working tree against the repository's default branch (from `refs/remotes/origin/HEAD`; do not assume `main` or `master`). Use `git diff --find-renames $(git merge-base <default-branch> HEAD)` to collect every file's path, additions, deletions, and hunks.
 
-**If the user didn't provide a PR link, stop and ask.** Do not guess at the current branch, infer from recent history, or fall back to a local `git diff`. Ask the user which diff they want to review — a specific PR URL or number — and wait for their reply before continuing.
+If no default branch is configured, stop and ask. Do not infer one from recent history.
 
 ## Group changes for comprehension
 

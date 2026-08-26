@@ -123,7 +123,7 @@
       "path": "pr-review-canvas/skills/pr-review-canvas",
       "vendoredFrom": "bdf7aa355337897f167153e05069aca505dae17c",
       "modified": true,
-      "note": "Renamed the skill from pr-review-canvas to code-review-canvas, and set disable-model-invocation so it runs only when named. Keep both during an update.",
+      "note": "Renamed the skill from pr-review-canvas to code-review-canvas, set disable-model-invocation so it runs only when named, and retargeted it from a GitHub PR to the local branch vs the default branch. Keep these during an update.",
       "harnesses": [
         "cursor"
       ],
