@@ -354,6 +354,46 @@ test("each harness receives only its own global instruction sections", async (t)
 });
 
 
+test("a cursor-only skill must not be installed in the shared skills directory", async (t) => {
+	const { setup } = await createFixture(t);
+	const home = join(setup, "home");
+	const manifestPath = join(setup, "agent-setup.json");
+	const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+	manifest.harnesses.cursor = {
+		installerAgent: "cursor",
+		skillsDirectory: "~/.cursor/skills",
+		readsSharedSkills: true,
+		globalInstructions: "~/.cursor/AGENTS.md",
+		check: { command: process.execPath, args: ["--version"] },
+	};
+	manifest.skills.cursorOnly = {
+		origin: "custom",
+		author: "Fixture",
+		license: "Test",
+		harnesses: ["cursor"],
+	};
+	await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+	await write(
+		join(setup, "skills", "cursorOnly", "SKILL.md"),
+		`---
+name: cursorOnly
+description: A fixture skill installed only for Cursor.
+---
+`,
+	);
+	await write(join(home, ".claude", "CLAUDE.md"), "# Global\n");
+	await write(join(home, ".cursor", "AGENTS.md"), "# Global\n");
+	await cp(join(setup, "skills", "cursorOnly"), join(home, ".cursor", "skills", "cursorOnly"), {
+		recursive: true,
+	});
+	await cp(join(setup, "skills", "cursorOnly"), join(home, ".agents", "skills", "cursorOnly"), {
+		recursive: true,
+	});
+
+	const result = runSetup(setup, "check", "--machine", "--home", home);
+	assert.match(result.stderr, /cursorOnly must not be installed in the shared skills directory\./u);
+});
+
 test("check reports a global instruction section that names an unknown harness", async (t) => {
 	const { setup } = await createFixture(t);
 	const manifestPath = join(setup, "agent-setup.json");

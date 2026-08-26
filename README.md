@@ -54,11 +54,11 @@ node scripts/agent-setup.mjs update
 The remaining files supply the declared content:
 
 - [`skills/`](./skills) contains custom and vendored skills.
-- [`global/AGENTS.md`](./global/AGENTS.md) contains the global instructions every harness receives, and [`global/codex.md`](./global/codex.md) contains the section only Codex receives.
+- [`global/AGENTS.md`](./global/AGENTS.md) contains the global instructions every harness receives, and [`global/codex.md`](./global/codex.md) contains the section only Codex receives. Cursor has no extra section yet. `apply` still writes [`global/AGENTS.md`](./global/AGENTS.md) to `~/.cursor/AGENTS.md`.
 - [`licenses/`](./licenses) preserves the notices for vendored work.
 - [`AGENTS.md`](./AGENTS.md) tells an agent how to maintain the repository.
 
-Installed files are outputs. Edit this repository, then run `apply`. Do not edit the copies under `~/.agents`, `~/.claude`, or `~/.codex` and expect the repository to import them.
+Installed files are outputs. Edit this repository, then run `apply`. Do not edit the copies under `~/.agents`, `~/.claude`, `~/.codex`, or `~/.cursor` and expect the repository to import them.
 
 ## Credit and license
 

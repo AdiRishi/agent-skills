@@ -48,7 +48,7 @@ Keep a rule in `global/AGENTS.md` when every harness follows it. Move it to the 
 
 Every skill is one folder directly under `skills/`. Keep the tree flat. A folder contains `SKILL.md` and every file that the skill links to.
 
-Claude Code reads the YAML frontmatter in `SKILL.md`. Codex also reads `agents/openai.yaml`. Add that file when the skill targets Codex. `short_description` must contain 25 to 64 characters.
+Claude Code reads the YAML frontmatter in `SKILL.md`. Codex also reads `agents/openai.yaml`. Add that file when the skill targets Codex. `short_description` must contain 25 to 64 characters. Cursor reads `SKILL.md` from `~/.cursor/skills`.
 
 Skills are model-invoked by default. Set `allowModelInvocation: false` in `agent-setup.json` only when Adi wants a skill invoked by name. Such a skill must set `disable-model-invocation: true` in `SKILL.md` and `policy.allow_implicit_invocation: false` in `agents/openai.yaml`. For other skills, remove those settings when an upstream skill carries them, then record the edit with `modified: true` and a `note` in `agent-setup.json`.
 
@@ -56,7 +56,7 @@ Skills are model-invoked by default. Set `allowModelInvocation: false` in `agent
 
 1. Add `skills/<name>/SKILL.md` and its referenced files.
 2. Add an `origin: "custom"` entry to `agent-setup.json`.
-3. Add `harnesses` only when the skill does not use `defaultHarnesses`.
+3. Add `harnesses` only when the skill does not use `defaultHarnesses`. Use `["cursor"]` for a skill that should install only under `~/.cursor/skills`.
 4. Add `agents/openai.yaml` when the skill targets Codex.
 5. Run `node scripts/agent-setup.mjs check --repository-only` and `pnpm test`.
 

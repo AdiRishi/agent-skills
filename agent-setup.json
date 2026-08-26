@@ -35,6 +35,18 @@
           "--version"
         ]
       }
+    },
+    "cursor": {
+      "installerAgent": "cursor",
+      "skillsDirectory": "~/.cursor/skills",
+      "readsSharedSkills": true,
+      "globalInstructions": "~/.cursor/AGENTS.md",
+      "check": {
+        "command": "cursor",
+        "args": [
+          "--version"
+        ]
+      }
     }
   },
   "requirements": {
