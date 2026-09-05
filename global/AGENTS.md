@@ -59,9 +59,3 @@ Keep existing comments accurate when behavior changes.
 ### Commits
 
 Commit at meaningful, reviewable checkpoints. Keep unrelated changes separate. Use messages that describe the behavior or design change, and order commits so the history explains the implementation.
-
-## Delegation
-
-One agent handles ordinary work in one pass. Use sub-agents only when independent breadth or an adversarial review justifies the handoff.
-
-When delegation is authorized, use the fewest agents that the independent workstreams require. State file ownership before parallel edits so agents do not collide.
