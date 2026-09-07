@@ -8,6 +8,4 @@ Use `/bin/zsh -lc '<command>'` only when login-shell initialization is required.
 
 ### Browser use
 
-When a task requires browser interaction, use the Browser plugin's in-app browser, `@Browser`, by default. Use the plugin's `@Chrome` browser when the task needs Adi's existing logins, browser profile, or open Chrome tabs. Follow an explicit choice of browser or tab for the current task.
-
-This preference selects the browser for interaction. Continue to use web search tools for research and purpose-built integrations when they can perform the task directly.
+For browser UI interaction, use the Browser plugin's in-app browser, `@Browser`, by default. When the task needs Adi's existing logins or Chrome tabs, use `@Chrome`.
