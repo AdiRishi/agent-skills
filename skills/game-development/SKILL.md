@@ -35,11 +35,9 @@ Judge the first build against both the experience brief and the concept images. 
 
 ## 4. Give the agent ways to inspect and play
 
-Build inspection support early, alongside the first slice. Provide repeatable scenes, useful state and performance observations, and a direct way to reproduce the important interactions. Extend existing tools before creating new ones.
+Read [Self-verification](references/self-verification.md) while building the first slice and when a failure is difficult to reproduce or assess. Build the inspection tools needed to verify that slice alongside it, using the real game systems.
 
-Use screenshots to inspect appearance and state observations to check what happened. Exercise the actual journey when testing a transition; loading its destination only establishes a starting state.
-
-Follow the user's division of testing work. Let the agent investigate and verify independently where permitted, while the human continues judging appearance and feel. Complete setup when the same problem can be reproduced and examined without unrelated gameplay.
+Complete this step when the agent can reproduce an important interaction, inspect its appearance and resulting state, and repeat the check after a change. Follow the user's division of testing work; the human continues judging appearance and feel.
 
 ## 5. Turn visual references into game assets
 
