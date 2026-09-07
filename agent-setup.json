@@ -141,6 +141,11 @@
       "author": "Adishwar Rishi",
       "license": "MIT"
     },
+    "game-development": {
+      "origin": "custom",
+      "author": "Adishwar Rishi",
+      "license": "MIT"
+    },
     "grilling": {
       "origin": "vendored",
       "source": "mattpocock-skills",
