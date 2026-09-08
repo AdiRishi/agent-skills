@@ -114,6 +114,14 @@
       "license": "MIT",
       "licenseFile": "licenses/pr-review-canvas-MIT.txt",
       "upstreamLicensePath": "pr-review-canvas/LICENSE"
+    },
+    "anthropic-skills": {
+      "repo": "https://github.com/anthropics/skills",
+      "ref": "main",
+      "author": "Anthropic",
+      "license": "Apache-2.0",
+      "licenseFile": "licenses/anthropic-skills-Apache-2.0.txt",
+      "upstreamLicensePath": "skills/frontend-design/LICENSE.txt"
     }
   },
   "skills": {
@@ -140,6 +148,16 @@
       "origin": "custom",
       "author": "Adishwar Rishi",
       "license": "MIT"
+    },
+    "frontend-design": {
+      "origin": "vendored",
+      "source": "anthropic-skills",
+      "path": "skills/frontend-design",
+      "vendoredFrom": "41bbe19d1a1a7eaab5e7bb9050a417e5c6cffc8f",
+      "modified": false,
+      "localFiles": [
+        "agents/openai.yaml"
+      ]
     },
     "game-development": {
       "origin": "custom",
