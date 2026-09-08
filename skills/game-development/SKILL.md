@@ -13,13 +13,17 @@ Consult [Example projects](references/example-projects.md) when looking for visu
 
 Describe what the player can do, what should feel satisfying, and what must remain true during play. Turn ambitions into observable constraints: a visible destination is reachable, a descent stays continuous, or water reacts to movement.
 
-Choose one small playable journey that proves the central experience. Establish its camera, controls, and target devices from the request and context. Complete the brief when that journey has clear success criteria.
+Establish the requested scope, camera, controls, and target devices from the request and context. Describe the attention the game asks of the player and the decisions that make play satisfying.
+
+Use a small playable journey to test the central experience during development. When asked to build the whole game, continue through implementation and verification of the full scope without waiting for milestone approval. Complete the brief when the requested experience has observable success criteria.
 
 ## 2. Generate and preserve the art direction
 
 Use image generation to explore the look before building most of the game. Generate representative gameplay views, including the central interaction and important transitions. Refine the images through feedback until the perspective, palette, contrast, detail, and atmosphere form a coherent direction.
 
 Use existing user references and choices when available. Otherwise, choose a provisional direction, show it, and continue building within the request.
+
+Before building or redesigning the interface, use image generation to design the gameplay HUD and main menus. Ask for professional game UI with a clear hierarchy and an unobstructed play area. Follow the generated layouts when implementing the interface.
 
 Save the selected images and their prompts in the project. Write a short art-direction note that points to them and records the visual qualities to preserve. Use the selected images as references for later image generation, asset creation, and runtime review.
 
@@ -35,7 +39,9 @@ Judge the first build against both the experience brief and the concept images. 
 
 ## 4. Give the agent ways to inspect and play
 
-Read [Self-verification](references/self-verification.md) while building the first slice and when a failure is difficult to reproduce or assess. Build the inspection tools needed to verify that slice alongside it, using the real game systems.
+Read [Self-verification](references/self-verification.md) while building the first slice, assessing mechanics or progression, and investigating failures. Build the inspection tools needed for the current interaction alongside it, using the real game systems.
+
+Open game tabs for active testing and close them afterward. Suspend rendering and audio while hidden or paused when the intended experience permits. Keep task-owned servers available for the player's testing session, then stop them when that session ends.
 
 Complete this step when the agent can reproduce an important interaction, inspect its appearance and resulting state, and repeat the check after a change. Follow the user's division of testing work; the human continues judging appearance and feel.
 
@@ -59,6 +65,8 @@ Complete an iteration with evidence of the improvement, relevant technical check
 
 ## 7. Expand and share from a working core
 
-Add content and progression around the interaction that already works. Carry the reference images and art-direction note into each new area, asset family, and effect. Repeat the play-and-refine loop as the game grows.
+Continue from the first playable through the requested scope. Add content and progression around the interaction that already works. Carry the reference images and art-direction note into each new area, asset family, and effect. Repeat the play-and-refine loop as the game grows.
 
-Keep current decisions and reproduction instructions with the project. Deliver a running build and distinguish verified behavior from pending player feedback. Keep the local server available during play. Follow the user's commit and publication instructions, and publish a playable browser link when requested.
+Keep selected references and prompts, editable assets, required export tools, and durable test fixtures. Put routine screenshots, logs, profiling captures, and intermediate renders in an ignored location. Before committing, remove superseded material and keep documentation focused on current decisions and reproduction instructions.
+
+Deliver a playable build with evidence against the requested experience and identify what still needs player judgment. State any unmet criteria explicitly. Follow the user's commit and publication instructions, and publish a playable browser link when requested.

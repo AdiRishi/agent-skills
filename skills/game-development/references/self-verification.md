@@ -22,11 +22,23 @@ Expose concise observations that explain the scene: current mode, relevant posit
 
 Capture images and relevant observations at the same point in the scenario. For motion, inspect a sequence through preparation, contact, and recovery. Compare the rendered result with the project's saved art references. Save the recipe and enough evidence to reproduce a failure.
 
+For interface changes, compare the HUD and menus with their references at the intended window sizes. Check text hierarchy, overlap, focus, and visibility of the central action. Use a lightweight view of the real interface for layout checks when useful, then verify it during gameplay.
+
 Use isolated studies to examine details, then exercise the actual player journey in the running game. Setting up the destination establishes a test fixture; reaching it verifies the transition. After staged combat, check normal resources, moving opponents, and real controls where those affect the result.
 
 Complete this step when both the visible behavior and its gameplay consequences satisfy the case. If either remains untested, record that gap explicitly.
 
-## 4. Turn repeatable defects into focused checks
+## 4. Check whether the mechanics serve the experience
+
+Identify the decisions the central mechanics should create. Compare simple repetitive strategies with play that uses those decisions under the same conditions. Investigate when ignoring a central mechanic works as well as engaging with it. Judge the result against the intended experience, including deliberate ease or low stakes.
+
+For combat, inspect whether enemies respond to the player and create distinct situations that reward movement, timing, or positioning. Check that attack warnings match the eventual attack and give the player a usable response window.
+
+For progression, examine representative early, middle, and late play. Identify what changes in the player's decisions as content unlocks. Measure time spent waiting and repeating solved actions, and revise pacing when increased quantities dominate the experience.
+
+Complete this step with evidence that the intended decisions affect play. Treat automated campaign completion as evidence of feasibility. Assess pacing and feel through play, and report any unmeasured duration target as a target.
+
+## 5. Turn repeatable defects into focused checks
 
 Keep gameplay rules runnable without the browser so agents can test real behavior quickly. Protect that separation as rendering and interface code grow.
 
@@ -36,7 +48,7 @@ For procedural or stateful failures, preserve the seed and action sequence. Chec
 
 Complete this step when the check catches the original defect and passes after the fix. Keep visual judgment alongside numeric checks; correct geometry alone does not establish good art or satisfying motion.
 
-## 5. Measure the slow scenario
+## 6. Measure the slow scenario
 
 Profile a repeatable route or scene at a known viewport and rendering configuration. Separate loading and warm-up from steady play. Collect frame intervals and relevant subsystem work, including slow frames and upper percentiles.
 
@@ -44,7 +56,7 @@ Use counters to explain changes in work, such as geometry, terrain queues, resou
 
 Complete this step by rerunning the same scenario and reporting the measured change, its environment, and its limits. Reinspect appearance after optimization.
 
-## 6. Close the loop with evidence
+## 7. Close the loop with evidence
 
 Run the relevant checks and revisit the original scenario after the change. Report what passed, what was visually inspected, and what still needs playtesting. Keep reproduction instructions and useful failure artifacts with the project so another agent can continue the investigation.
 
