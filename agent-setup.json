@@ -50,28 +50,6 @@
     }
   },
   "requirements": {
-    "twg-cli-skills-uninstalled": {
-      "description": "TWG CLI companion skills are not installed as top-level agent skills",
-      "requiredBy": [
-        "twg"
-      ],
-      "check": {
-        "command": "bash",
-        "args": [
-          "-lc",
-          "shopt -s nullglob; found=(); for root in \"$HOME/.agents/skills\" \"$HOME/.claude/skills\" \"$HOME/.codex/skills\" \"$HOME/.cursor/skills\" \"$HOME/.gemini/skills\" \"$HOME/.config/github-copilot/skills\" \"$HOME/.augment/skills\" \"$HOME/.kiro/skills\" \"$HOME/.config/opencode/skills\"; do for d in \"$root\"/twg-*; do [ -d \"$d\" ] && found+=(\"$d\"); done; done; ((${#found[@]}==0))"
-        ]
-      },
-      "apply": {
-        "command": "twg",
-        "args": [
-          "skills",
-          "uninstall",
-          "--all-agents",
-          "-y"
-        ]
-      }
-    },
     "codex-mcp": {
       "description": "Claude Code can reach Codex through its MCP server",
       "requiredBy": [
@@ -211,11 +189,6 @@
       "localFiles": [
         "agents/openai.yaml"
       ]
-    },
-    "twg": {
-      "origin": "custom",
-      "author": "Atlassian",
-      "license": "Atlassian Customer Agreement"
     },
     "typescript-best-practices": {
       "origin": "vendored",
