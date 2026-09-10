@@ -18,7 +18,7 @@ Complete this step when rerunning the recipe returns to the same useful starting
 
 ## 3. Inspect appearance and consequences together
 
-Expose concise observations that explain the scene: current mode, relevant positions, resources, contacts, events, and loading readiness. Select observations for the question being investigated. Make them available through the project's browser tools or development views.
+Expose concise observations that explain the scene: current mode, relevant positions, resources, contacts, events, and loading readiness. Select observations for the question being investigated. Make them available through the project's inspection tools or development views.
 
 Capture images and relevant observations at the same point in the scenario. For motion, inspect a sequence through preparation, contact, and recovery. Compare the rendered result with the project's saved art references. Save the recipe and enough evidence to reproduce a failure.
 
@@ -40,7 +40,7 @@ Complete this step with evidence that the intended decisions affect play. Treat 
 
 ## 5. Turn repeatable defects into focused checks
 
-Keep gameplay rules runnable without the browser so agents can test real behavior quickly. Protect that separation as rendering and interface code grow.
+Use the project's test tools to check gameplay rules and exercise engine-dependent behavior through the real runtime systems.
 
 Test visual relationships numerically when they have objective constraints. Hands can remain attached to a weapon, joints can stay connected, and movement can stay continuous across animation boundaries. Sweep relevant facings, phases, seeds, or equipment variants instead of checking only the default pose. See [Evergrow's rig tests](https://github.com/Dimillian/Evergrow/blob/main/game/tests/player-rig.test.ts).
 
