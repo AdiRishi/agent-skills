@@ -7,6 +7,10 @@ description: Use when building a new game or modifying an existing game's gamepl
 
 Use this sequence for a new game. For an existing game, resume at the relevant step using its established references and decisions. The human directs the experience and judges how it feels; the agent discovers and carries out the technical work.
 
+Preserve an explicitly chosen engine or an established project stack. For Unity projects, use the installed Unity plugin's relevant `unity:` skills for engine-specific work. Keep this skill's experience, art direction, playtesting, and completion criteria active throughout that work.
+
+For games implemented with web technologies, read [Browser games](references/browser-games.md) when choosing technology, implementing the game, or setting up verification. Choose guidance by the game's engine, including when Unity targets the web.
+
 Consult [Example projects](references/example-projects.md) when looking for visual inspiration or a working example of procedural art, asset integration, or inspection tools.
 
 ## 1. Start with the experience
@@ -31,7 +35,7 @@ Complete this step with a reusable reference set and a clear visual target for t
 
 ## 3. Let the agent solve the implementation
 
-Read [Technology choices](references/technology.md) when selecting the stack or adding a tool. Use those technologies as starting points, then investigate their current capabilities and the project's needs. Choose APIs, algorithms, and module structure from the actual problem.
+Discover current capabilities from installed tools, project versions, and official documentation. Choose APIs, algorithms, and module structure from the actual problem.
 
 Build the small journey end to end. Keep gameplay rules separate from presentation so rendering and assets can evolve without replacing the simulation. Make visual and physical behavior agree wherever players interact with the world.
 
@@ -40,8 +44,6 @@ Judge the first build against both the experience brief and the concept images. 
 ## 4. Give the agent ways to inspect and play
 
 Read [Self-verification](references/self-verification.md) while building the first slice, assessing mechanics or progression, and investigating failures. Build the inspection tools needed for the current interaction alongside it, using the real game systems.
-
-Open game tabs for active testing and close them afterward. Suspend rendering and audio while hidden or paused when the intended experience permits. Keep task-owned servers available for the player's testing session, then stop them when that session ends.
 
 Complete this step when the agent can reproduce an important interaction, inspect its appearance and resulting state, and repeat the check after a change. Follow the user's division of testing work; the human continues judging appearance and feel.
 
@@ -69,4 +71,4 @@ Continue from the first playable through the requested scope. Add content and pr
 
 Keep selected references and prompts, editable assets, required export tools, and durable test fixtures. Put routine screenshots, logs, profiling captures, and intermediate renders in an ignored location. Before committing, remove superseded material and keep documentation focused on current decisions and reproduction instructions.
 
-Deliver a playable build with evidence against the requested experience and identify what still needs player judgment. State any unmet criteria explicitly. Follow the user's commit and publication instructions, and publish a playable browser link when requested.
+Deliver a playable build for the requested target with evidence against the requested experience and identify what still needs player judgment. State any unmet criteria explicitly. Follow the user's commit and publication instructions.
