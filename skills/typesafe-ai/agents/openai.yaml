@@ -1,0 +1,3 @@
+interface:
+  display_name: "TypeSafe"
+  short_description: "Build typed AI judgments with TypeSafe System One"

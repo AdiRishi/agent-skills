@@ -88,6 +88,14 @@
       "license": "Apache-2.0",
       "licenseFile": "licenses/anthropic-skills-Apache-2.0.txt",
       "upstreamLicensePath": "skills/frontend-design/LICENSE.txt"
+    },
+    "typesafe-ai-skills": {
+      "repo": "https://github.com/typesafe-ai/skills",
+      "ref": "main",
+      "author": "TypeSafe AI",
+      "license": "MIT",
+      "licenseFile": "licenses/typesafe-ai-skills-MIT.txt",
+      "upstreamLicensePath": "LICENSE"
     }
   },
   "skills": {
@@ -167,6 +175,16 @@
       "vendoredFrom": "7314f723a487ec406b6369fe5865ba034cfed166",
       "modified": true,
       "note": "Removed disable-model-invocation so the model can invoke the skill, and retargeted standalone principle-skill references to reference files in engineering-principles. Keep these changes during updates.",
+      "localFiles": [
+        "agents/openai.yaml"
+      ]
+    },
+    "typesafe-ai": {
+      "origin": "vendored",
+      "source": "typesafe-ai-skills",
+      "path": "skills/typesafe-ai",
+      "vendoredFrom": "65a39f393687675ce170e6094757de20370365b9",
+      "modified": false,
       "localFiles": [
         "agents/openai.yaml"
       ]
