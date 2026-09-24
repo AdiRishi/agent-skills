@@ -144,6 +144,15 @@
       "vendoredFrom": "3cca18b368ae95cdbdebbff572ccafa662551015",
       "modified": false
     },
+    "delegate": {
+      "origin": "custom",
+      "author": "Adishwar Rishi",
+      "license": "MIT",
+      "harnesses": [
+        "codex"
+      ],
+      "allowModelInvocation": false
+    },
     "engineering-principles": {
       "origin": "custom",
       "author": "Adishwar Rishi",
