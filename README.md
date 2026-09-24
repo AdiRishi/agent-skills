@@ -48,7 +48,6 @@ node scripts/agent-setup.mjs update
 - the supported harnesses and their instruction paths
 - each skill's installation targets
 - the pinned `skills` installer version
-- required integrations, including the Codex MCP server used by `invoke-codex`
 - upstream repositories, commits, local files, and merge notes
 
 The remaining files supply the declared content:

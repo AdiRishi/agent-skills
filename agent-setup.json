@@ -49,41 +49,7 @@
       }
     }
   },
-  "requirements": {
-    "codex-mcp": {
-      "description": "Claude Code can reach Codex through its MCP server",
-      "requiredBy": [
-        "invoke-codex"
-      ],
-      "check": {
-        "command": "claude",
-        "args": [
-          "mcp",
-          "get",
-          "codex"
-        ],
-        "outputIncludes": [
-          "Status: ✔ Connected",
-          "Command: codex",
-          "Args: mcp-server",
-          "Scope: User config"
-        ]
-      },
-      "apply": {
-        "command": "claude",
-        "args": [
-          "mcp",
-          "add",
-          "--scope",
-          "user",
-          "codex",
-          "--",
-          "codex",
-          "mcp-server"
-        ]
-      }
-    }
-  },
+  "requirements": {},
   "globalInstructions": {
     "source": "global/AGENTS.md",
     "harnessSections": {
@@ -179,14 +145,6 @@
       "path": "skills/productivity/grilling",
       "vendoredFrom": "3cca18b368ae95cdbdebbff572ccafa662551015",
       "modified": false
-    },
-    "invoke-codex": {
-      "origin": "custom",
-      "author": "Adishwar Rishi",
-      "license": "MIT",
-      "harnesses": [
-        "claude-code"
-      ]
     },
     "technical-writing": {
       "origin": "vendored",
