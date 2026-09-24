@@ -137,7 +137,10 @@
     "game-development": {
       "origin": "custom",
       "author": "Adishwar Rishi",
-      "license": "MIT"
+      "license": "MIT",
+      "harnesses": [
+        "codex"
+      ]
     },
     "grilling": {
       "origin": "vendored",
