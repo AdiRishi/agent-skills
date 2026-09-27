@@ -4,11 +4,11 @@
 
 # Agent setup
 
-This repository defines the skills and global instructions that Adi's coding agents use. It can inspect a Mac, apply the declared setup, and update skills copied from upstream repositories.
+This repository defines the skills and global instructions that Adi's coding agents use. It can inspect a Mac or a Windows machine, apply the declared setup, and update skills copied from upstream repositories.
 
-## Set up a Mac
+## Set up a machine
 
-Clone the repository, then apply the current checkout:
+The setup command needs Node 22 or later and Git. Clone the repository, then apply the current checkout:
 
 ```bash
 git clone https://github.com/AdiRishi/agent-skills
@@ -24,6 +24,24 @@ Run the machine check again at any time:
 node scripts/agent-setup.mjs check --machine
 ```
 
+On Windows, run the same commands from PowerShell or Git Bash. Unless symlinks are enabled, Git for Windows checks `CLAUDE.md` out as a plain file that holds the text `AGENTS.md`. The repository check accepts that file on Windows.
+
+## Choose the harnesses a machine runs
+
+By default, `apply` and `check --machine` manage every harness in `agent-setup.json` and run each harness's `check` command. To manage fewer harnesses on a machine, list them in `~/.config/agent-skills/machine.json`, next to the state file:
+
+```json
+{
+	"harnesses": ["claude-code", "codex"],
+	"skipHarnessChecks": ["codex"]
+}
+```
+
+- `harnesses` names the harnesses this machine runs. `apply` installs skills and global instructions for these harnesses only. It skips a skill that targets none of them and leaves the files of other harnesses alone.
+- `skipHarnessChecks` names harnesses whose `check` command does not run. Use it for a harness installed without its command-line tool, such as the Codex desktop app on Windows.
+
+The file belongs to the machine. The repository does not track it.
+
 ## Work with the repository
 
 The setup command has three operations:
@@ -32,7 +50,7 @@ The setup command has three operations:
 # Validate repository structure and metadata.
 node scripts/agent-setup.mjs check --repository-only
 
-# Make this Mac match the current checkout.
+# Make this machine match the current checkout.
 node scripts/agent-setup.mjs apply
 
 # Fetch and merge every vendored skill from its declared upstream.

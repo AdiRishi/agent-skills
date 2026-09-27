@@ -22,10 +22,10 @@ The command interface owns mechanical work:
 # Validate this repository.
 node scripts/agent-setup.mjs check --repository-only
 
-# Validate this repository and the current Mac.
+# Validate this repository and the current machine.
 node scripts/agent-setup.mjs check --machine
 
-# Make the current Mac match this checkout.
+# Make the current machine match this checkout.
 node scripts/agent-setup.mjs apply
 
 # Refresh all vendored skills from upstream.

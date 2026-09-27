@@ -2,6 +2,7 @@
 
 import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
 import {
 	cp,
 	lstat,
@@ -15,7 +16,7 @@ import {
 	writeFile,
 } from "node:fs/promises";
 import { homedir, tmpdir } from "node:os";
-import { basename, dirname, join, relative, resolve, sep } from "node:path";
+import { basename, delimiter, dirname, extname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const scriptRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -62,8 +63,8 @@ function printUsage() {
 	console.log(`Usage: node scripts/agent-setup.mjs <command> [options]
 
 Commands:
-  check [--machine]            Validate the repository and optionally the Mac
-  apply [--dry-run]            Make the Mac match this checkout
+  check [--machine]            Validate the repository and optionally this machine
+  apply [--dry-run]            Make this machine match this checkout
   update [--dry-run]           Refresh every vendored skill from upstream
 
 Options:
@@ -73,8 +74,52 @@ Options:
   --dry-run                    Print writes without applying them`);
 }
 
+// Windows cannot spawn .cmd or .bat shims such as npx directly, so they run through cmd.exe.
+function findWindowsShim(command) {
+	const extensions = (process.env.PATHEXT ?? ".COM;.EXE;.BAT;.CMD").split(";").filter(Boolean);
+	const hasExtension = extensions.some(
+		(extension) => extension.toLowerCase() === extname(command).toLowerCase(),
+	);
+	const names = hasExtension ? [command] : extensions.map((extension) => `${command}${extension}`);
+	const directories = /[\\/]/u.test(command)
+		? [""]
+		: (process.env.PATH ?? "").split(delimiter).filter(Boolean);
+	for (const directory of directories) {
+		for (const name of names) {
+			const candidate = directory ? join(directory, name) : name;
+			if (existsSync(candidate)) {
+				return /\.(?:cmd|bat)$/iu.test(candidate) ? candidate : undefined;
+			}
+		}
+	}
+	return undefined;
+}
+
+const cmdMetacharacters = /[()[\]%!^"`<>&|;, *?]/gu;
+
+function escapeForCmd(value) {
+	return value.replace(cmdMetacharacters, "^$&");
+}
+
+// Quote for the C runtime, then caret-escape twice: once for cmd.exe /c and once for the shim's
+// own %* expansion.
+function quoteShimArgument(argument) {
+	const quoted = `"${argument.replace(/(\\*)"/gu, '$1$1\\"').replace(/(\\*)$/u, "$1$1")}"`;
+	return escapeForCmd(escapeForCmd(quoted));
+}
+
+function spawnCommand(command, args, options) {
+	const shim = process.platform === "win32" ? findWindowsShim(command) : undefined;
+	if (!shim) return spawnSync(command, args, options);
+	const commandLine = [escapeForCmd(`"${shim}"`), ...args.map(quoteShimArgument)].join(" ");
+	return spawnSync(process.env.ComSpec ?? "cmd.exe", ["/d", "/s", "/c", `"${commandLine}"`], {
+		...options,
+		windowsVerbatimArguments: true,
+	});
+}
+
 function run(command, args, options = {}) {
-	const result = spawnSync(command, args, {
+	const result = spawnCommand(command, args, {
 		cwd: options.cwd,
 		encoding: "utf8",
 		stdio: options.inherit ? "inherit" : "pipe",
@@ -442,7 +487,13 @@ async function checkRepository(root) {
 	const claudeInstructions = join(root, "CLAUDE.md");
 	try {
 		const stats = await lstat(claudeInstructions);
-		if (!stats.isSymbolicLink() || (await readlink(claudeInstructions)) !== "AGENTS.md") {
+		const target = stats.isSymbolicLink()
+			? await readlink(claudeInstructions)
+			: process.platform === "win32" && stats.isFile()
+				? // Without symlink support, Git for Windows checks a link out as a file holding its target.
+					await readFile(claudeInstructions, "utf8")
+				: undefined;
+		if (target !== "AGENTS.md") {
 			issues.push("CLAUDE.md must be a symlink to AGENTS.md.");
 		}
 	} catch (error) {
@@ -463,10 +514,10 @@ function printCheck(label, issues) {
 	for (const issue of issues) console.error(`- ${issue}`);
 }
 
+// Exclusions come from the manifest with / separators, whatever the platform separator is.
 function excluded(relativePath, exclusions) {
-	return exclusions.some(
-		(exclusion) => relativePath === exclusion || relativePath.startsWith(`${exclusion}${sep}`),
-	);
+	const path = relativePath.split(sep).join("/");
+	return exclusions.some((exclusion) => path === exclusion || path.startsWith(`${exclusion}/`));
 }
 
 async function directoryEntries(root, exclusions = []) {
@@ -562,9 +613,71 @@ async function checkCommand(check, label) {
 	return undefined;
 }
 
-async function checkMachine(root, home, manifest, rawManifest) {
+function machineSettingsPath(manifest, home) {
+	return join(dirname(expandHome(manifest.stateFile, home)), "machine.json");
+}
+
+function isStringArray(value) {
+	return Array.isArray(value) && value.every(isNonEmptyString);
+}
+
+// A machine may declare the harnesses it runs. The returned manifest keeps only those harnesses
+// and narrows every skill to them. Without machine settings, every harness applies.
+async function readMachineSettings(manifest, home) {
+	const path = machineSettingsPath(manifest, home);
+	if (!(await pathExists(path))) return { manifest, skippedChecks: [], unusedSkillRoots: [] };
+
+	let settings;
+	try {
+		settings = JSON.parse(await readFile(path, "utf8"));
+	} catch (error) {
+		fail(`Cannot read machine settings ${path}: ${error.message}`);
+	}
+	const known = Object.keys(manifest.harnesses);
+	const harnesses = settings.harnesses ?? known;
+	const skippedChecks = settings.skipHarnessChecks ?? [];
+	if (!isStringArray(harnesses) || !isStringArray(skippedChecks)) {
+		fail(`${path} must hold string arrays in harnesses and skipHarnessChecks.`);
+	}
+	for (const name of [...harnesses, ...skippedChecks]) {
+		if (!known.includes(name)) fail(`${path} names unknown harness ${name}.`);
+	}
+	for (const name of skippedChecks) {
+		if (!harnesses.includes(name)) fail(`${path} skips the check of unused harness ${name}.`);
+	}
+
+	const used = (names) => names.filter((name) => harnesses.includes(name));
+	const skills = {};
+	for (const [name, skill] of Object.entries(manifest.skills)) {
+		const targets = used(skillHarnesses(manifest, skill));
+		if (targets.length > 0) skills[name] = { ...skill, harnesses: targets };
+	}
+	return {
+		description: `MACHINE ${path}: harnesses ${used(known).join(", ") || "none"}${skippedChecks.length > 0 ? `; unchecked ${skippedChecks.join(", ")}` : ""}`,
+		manifest: {
+			...manifest,
+			defaultHarnesses: used(manifest.defaultHarnesses),
+			harnesses: Object.fromEntries(
+				Object.entries(manifest.harnesses).filter(([name]) => harnesses.includes(name)),
+			),
+			requirements: Object.fromEntries(
+				Object.entries(manifest.requirements).filter(([, requirement]) =>
+					requirement.requiredBy.some((skill) => skills[skill]),
+				),
+			),
+			skills,
+		},
+		skippedChecks,
+		unusedSkillRoots: Object.entries(manifest.harnesses)
+			.filter(([name]) => !harnesses.includes(name))
+			.map(([, harness]) => expandHome(harness.skillsDirectory, home)),
+	};
+}
+
+async function checkMachine(root, home, manifest, rawManifest, skippedChecks = []) {
 	const issues = [];
 	for (const [name, harness] of Object.entries(manifest.harnesses)) {
+		if (skippedChecks.includes(name)) continue;
 		const issue = await checkCommand(harness.check, `${name} check`);
 		if (issue) issues.push(issue);
 	}
@@ -670,7 +783,7 @@ async function loadState(path) {
 	}
 }
 
-async function applySetup(root, home, manifest, rawManifest, dryRun) {
+async function applySetup(root, home, manifest, rawManifest, dryRun, unusedSkillRoots = []) {
 	const packageSpec = `${manifest.installer.package}@${manifest.installer.version}`;
 	for (const group of installGroups(manifest)) {
 		const agents = group.harnesses.map(
@@ -732,6 +845,8 @@ async function applySetup(root, home, manifest, rawManifest, dryRun) {
 	}
 	for (const location of cleanup) {
 		if (desiredLocations.has(location) || !(await pathExists(location))) continue;
+		// Leave copies under harnesses this machine no longer uses.
+		if (isManagedSkillLocation(location, unusedSkillRoots)) continue;
 		if (!isManagedSkillLocation(location, roots)) fail(`Refusing to remove unmanaged path ${location}.`);
 		console.log(`REMOVE ${location}`);
 		if (!dryRun) await rm(location, { recursive: true, force: true });
@@ -821,6 +936,7 @@ async function prepareMerge(base, upstream, local, localFiles, tempRoot) {
 	const mergeRoot = join(tempRoot, "merge");
 	await mkdir(mergeRoot, { recursive: true });
 	git(["init", "--quiet"], mergeRoot);
+	git(["config", "core.autocrlf", "false"], mergeRoot);
 	git(["config", "user.name", "agent-setup"], mergeRoot);
 	git(["config", "user.email", "agent-setup@localhost"], mergeRoot);
 	git(["config", "commit.gpgSign", "false"], mergeRoot);
@@ -887,7 +1003,20 @@ async function updateVendoredSkills(root, manifest, dryRun) {
 		for (const [sourceName, source] of Object.entries(manifest.sources)) {
 			const repository = join(tempRoot, sourceName, "repository");
 			await mkdir(dirname(repository), { recursive: true });
-			git(["clone", "--quiet", "--filter=blob:none", "--no-checkout", source.repo, repository], root);
+			// Disable autocrlf so Windows checkouts compare byte-for-byte with the LF files here.
+			git(
+				[
+					"clone",
+					"--quiet",
+					"--filter=blob:none",
+					"--no-checkout",
+					"--config",
+					"core.autocrlf=false",
+					source.repo,
+					repository,
+				],
+				root,
+			);
 			git(["fetch", "--quiet", "origin", source.ref], repository);
 			const upstreamCommit = git(["rev-parse", "FETCH_HEAD"], repository);
 
@@ -982,11 +1111,14 @@ async function main() {
 
 	if (command === "check") {
 		if (!options.repositoryOnly && options.machine) {
+			const machine = await readMachineSettings(repository.manifest, options.home);
+			if (machine.description) console.log(machine.description);
 			const issues = await checkMachine(
 				options.root,
 				options.home,
-				repository.manifest,
+				machine.manifest,
 				repository.raw,
+				machine.skippedChecks,
 			);
 			printCheck("machine", issues);
 			if (issues.length > 0) process.exitCode = 1;
@@ -996,20 +1128,25 @@ async function main() {
 
 	if (repository.issues.length > 0) return;
 	if (command === "apply") {
+		const machine = await readMachineSettings(repository.manifest, options.home);
+		if (machine.description) console.log(machine.description);
 		await applySetup(
 			options.root,
 			options.home,
-			repository.manifest,
+			machine.manifest,
 			repository.raw,
 			options.dryRun,
+			machine.unusedSkillRoots,
 		);
 		if (!options.dryRun) {
 			const updated = await readManifest(options.root);
+			const updatedMachine = await readMachineSettings(updated.manifest, options.home);
 			const issues = await checkMachine(
 				options.root,
 				options.home,
-				updated.manifest,
+				updatedMachine.manifest,
 				updated.raw,
+				updatedMachine.skippedChecks,
 			);
 			printCheck("machine", issues);
 			if (issues.length > 0) process.exitCode = 1;
