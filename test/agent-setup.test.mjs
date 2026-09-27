@@ -3,10 +3,10 @@ import { spawnSync } from "node:child_process";
 import { cp, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import test from "node:test";
 
-const repositoryRoot = new URL("../", import.meta.url).pathname;
+const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
 const setupCommand = join(repositoryRoot, "scripts", "agent-setup.mjs");
 
 function run(command, args, cwd) {
@@ -102,6 +102,7 @@ async function createFixture(t, options = {}) {
 		recursive: true,
 	});
 	await write(join(setup, "skills", "plain", "LOCAL.md"), "keep me\n");
+	await write(join(setup, "skills", "plain", "agents", "local.yaml"), "keep me too\n");
 	await write(
 		join(setup, "skills", "custom", "SKILL.md"),
 		options.conflict
@@ -112,7 +113,11 @@ async function createFixture(t, options = {}) {
 	await write(join(setup, "licenses", "upstream.txt"), "old license\n");
 	await write(join(setup, "README.md"), "# Fixture\n");
 	await write(join(setup, "AGENTS.md"), "# Fixture agent instructions\n");
-	await symlink("AGENTS.md", join(setup, "CLAUDE.md"));
+	await symlink("AGENTS.md", join(setup, "CLAUDE.md")).catch(async (error) => {
+		// Windows refuses symlinks without Developer Mode; mirror how Git checks the link out there.
+		if (process.platform !== "win32" || error.code !== "EPERM") throw error;
+		await writeFile(join(setup, "CLAUDE.md"), "AGENTS.md");
+	});
 	await write(join(setup, "agent-setup.schema.json"), "{}\n");
 
 	const manifest = {
@@ -150,7 +155,7 @@ async function createFixture(t, options = {}) {
 				path: "skills/plain",
 				vendoredFrom: oldCommit,
 				modified: false,
-				localFiles: ["LOCAL.md"],
+				localFiles: ["LOCAL.md", "agents/local.yaml"],
 			},
 			custom: {
 				origin: "vendored",
@@ -267,6 +272,10 @@ test("update mirrors upstream, preserves local files, and merges declared change
 	assert.equal(result.status, 0, `${result.stdout}${result.stderr}`);
 
 	assert.equal(await readFile(join(setup, "skills", "plain", "LOCAL.md"), "utf8"), "keep me\n");
+	assert.equal(
+		await readFile(join(setup, "skills", "plain", "agents", "local.yaml"), "utf8"),
+		"keep me too\n",
+	);
 	assert.equal(await readFile(join(setup, "skills", "plain", "NEW.md"), "utf8"), "new file\n");
 	await assert.rejects(readFile(join(setup, "skills", "plain", "OBSOLETE.md")), {
 		code: "ENOENT",
@@ -278,6 +287,7 @@ test("update mirrors upstream, preserves local files, and merges declared change
 
 	const manifest = JSON.parse(await readFile(join(setup, "agent-setup.json"), "utf8"));
 	assert.equal(manifest.skills.plain.vendoredFrom, newCommit);
+	assert.equal(manifest.skills.plain.modified, false);
 	assert.equal(manifest.skills.custom.vendoredFrom, newCommit);
 	assert.equal(manifest.skills.custom.modified, true);
 	assert.equal(git(setup, "status", "--porcelain", "--", "skills/plain/OBSOLETE.md").length > 0, true);
@@ -316,9 +326,12 @@ description: A fixture skill installed only for Cursor.
 	assert.equal(result.status, 0, `${result.stdout}${result.stderr}`);
 	assert.match(
 		result.stdout,
-		/COPY .+\/skills\/cursorOnly -> .+\/\.cursor\/skills\/cursorOnly/u,
+		/COPY .+[\\/]skills[\\/]cursorOnly -> .+[\\/]\.cursor[\\/]skills[\\/]cursorOnly/u,
 	);
-	assert.doesNotMatch(result.stdout, /COPY .+\/skills\/cursorOnly -> .+\/\.agents\/skills\/cursorOnly/u);
+	assert.doesNotMatch(
+		result.stdout,
+		/COPY .+[\\/]skills[\\/]cursorOnly -> .+[\\/]\.agents[\\/]skills[\\/]cursorOnly/u,
+	);
 });
 
 test("apply plans a declared repair when a requirement check fails", async (t) => {
@@ -429,6 +442,69 @@ description: A fixture skill installed only for Cursor.
 
 	const result = runSetup(setup, "check", "--machine", "--home", home);
 	assert.match(result.stderr, /cursorOnly must not be installed in the shared skills directory\./u);
+});
+
+test("machine settings limit apply and check to the harnesses a machine runs", async (t) => {
+	const { setup } = await createFixture(t);
+	const home = join(setup, "home");
+	const manifestPath = join(setup, "agent-setup.json");
+	const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+	manifest.harnesses.codex = {
+		installerAgent: "codex",
+		skillsDirectory: "~/.codex/skills",
+		readsSharedSkills: true,
+		globalInstructions: "~/.codex/AGENTS.md",
+		check: { command: process.execPath, args: ["-e", "process.exit(1)"] },
+	};
+	manifest.harnesses.cursor = {
+		installerAgent: "cursor",
+		skillsDirectory: "~/.cursor/skills",
+		readsSharedSkills: true,
+		globalInstructions: "~/.cursor/AGENTS.md",
+		check: { command: process.execPath, args: ["-e", "process.exit(1)"] },
+	};
+	manifest.skills.cursorOnly = {
+		origin: "custom",
+		author: "Fixture",
+		license: "Test",
+		harnesses: ["cursor"],
+	};
+	await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+	await write(
+		join(setup, "skills", "cursorOnly", "SKILL.md"),
+		`---
+name: cursorOnly
+description: A fixture skill installed only for Cursor.
+---
+`,
+	);
+
+	const everyHarness = runSetup(setup, "check", "--machine", "--home", home);
+	assert.match(everyHarness.stderr, /codex check failed/u);
+	assert.match(everyHarness.stderr, /cursor check failed/u);
+	assert.doesNotMatch(everyHarness.stdout, /MACHINE/u);
+
+	const machinePath = join(home, ".config", "agent-skills", "machine.json");
+	await write(
+		machinePath,
+		`${JSON.stringify({ harnesses: ["claude-code", "codex"], skipHarnessChecks: ["codex"] })}\n`,
+	);
+	const limited = runSetup(setup, "check", "--machine", "--home", home);
+	const limitedOutput = `${limited.stdout}${limited.stderr}`;
+	assert.match(limited.stdout, /MACHINE .+: harnesses claude-code, codex; unchecked codex/u);
+	assert.doesNotMatch(limitedOutput, /codex check/u);
+	assert.doesNotMatch(limitedOutput, /cursor/u);
+	assert.match(limited.stderr, /codex global instructions are missing/u);
+
+	const plan = runSetup(setup, "apply", "--dry-run", "--home", home);
+	assert.equal(plan.status, 0, `${plan.stdout}${plan.stderr}`);
+	assert.doesNotMatch(plan.stdout, /cursor/iu);
+	assert.match(plan.stdout, /WRITE global[\\/]AGENTS\.md -> .+[\\/]\.codex[\\/]AGENTS\.md/u);
+
+	await write(machinePath, `${JSON.stringify({ harnesses: ["claude-code", "zed"] })}\n`);
+	const unknown = runSetup(setup, "apply", "--dry-run", "--home", home);
+	assert.notEqual(unknown.status, 0);
+	assert.match(unknown.stderr, /names unknown harness zed/u);
 });
 
 test("check reports a global instruction section that names an unknown harness", async (t) => {
