@@ -56,6 +56,10 @@ Do not narrate what the next line does. Do not mention the current task, a calle
 
 Keep existing comments accurate when behavior changes.
 
+### Branches
+
+Name branches with the Conventional Branch format, `<type>/<description>`, unless the project has its own convention. Take the type from Conventional Commits, such as `feat`, `fix`, `refactor`, `docs`, `test`, or `chore`. Write the description in kebab-case and name the change, such as `fix/expired-webhook-retries` or `feat/vendored-skill-updates`.
+
 ### Commits
 
 Commit at meaningful, reviewable checkpoints. Keep unrelated changes separate. Use messages that describe the behavior or design change, and order commits so the history explains the implementation.
