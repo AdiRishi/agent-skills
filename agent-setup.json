@@ -118,6 +118,11 @@
       "vendoredFrom": "3cca18b368ae95cdbdebbff572ccafa662551015",
       "modified": false
     },
+    "commbank-archive": {
+      "origin": "custom",
+      "author": "Adishwar Rishi",
+      "license": "MIT"
+    },
     "delegate": {
       "origin": "custom",
       "author": "Adishwar Rishi",
