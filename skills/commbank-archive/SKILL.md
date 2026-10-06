@@ -1,6 +1,7 @@
 ---
 name: commbank-archive
-description: Extract CommBank NetBank transactions and statements, or maintain Adi's numbered Commbank Data archive with verified updates and upload coverage.
+description: Extract and maintain Adi's numbered Commbank Data archive with verified transaction exports and statements.
+disable-model-invocation: true
 ---
 
 # Maintain the Commbank archive
