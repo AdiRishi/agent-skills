@@ -121,7 +121,8 @@
     "commbank-archive": {
       "origin": "custom",
       "author": "Adishwar Rishi",
-      "license": "MIT"
+      "license": "MIT",
+      "allowModelInvocation": false
     },
     "delegate": {
       "origin": "custom",
