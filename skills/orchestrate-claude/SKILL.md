@@ -20,12 +20,12 @@ Assign a feature and its tests to one subagent. A split between planning, implem
 
 A subagent inherits your model unless the Agent call names one. In a Fable session, an Agent call without `model` spawns Fable. Pass `model` on every Agent call, and pass `effort` where the table sets one.
 
-| `model`  | `effort` | Assign                                                                                                                                             |
-| -------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `opus`   | omit     | A workstream that needs judgment: a feature with its tests, a hard bug, a refactor across modules. It can lead its own Sonnet and Haiku subagents. |
-| `sonnet` | `high`   | Implementation against a settled design, mechanical edits across files, test runs and fixes, reading and condensing sources.                       |
-| `haiku`  | `xhigh`  | Narrow lookups: codebase search, facts from logs or documents, lists and classifications. Keep design choices with a stronger model.               |
-| `fable`  | omit     | An independent second opinion on a decision you cannot settle alone.                                                                               |
+| `model`  | `effort` | Assign                                                                                                                                                              |
+| -------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `opus`   | omit     | A workstream that needs judgment: a feature with its tests, a hard bug, a refactor across modules. It can lead its own Sonnet and Haiku subagents.                  |
+| `sonnet` | `high`   | Implementation against a settled design, mechanical edits across files, test runs and fixes, reading and condensing sources.                                        |
+| `haiku`  | `xhigh`  | Narrow lookups: codebase search, facts from logs or documents, lists and classifications. Keep design choices with a stronger model.                                |
+| `fable`  | omit     | Rarely. One narrow question that is too hard to reason through or verify yourself, or a second opinion on a decision you cannot settle. Give it only that question. |
 
 Omit `effort` for Opus and Fable so they run at the configured default. If an assignment fits two models, pick the stronger one. A failed attempt and its retry cost more than the price difference.
 
