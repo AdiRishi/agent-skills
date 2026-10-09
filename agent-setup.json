@@ -103,7 +103,7 @@
       "origin": "vendored",
       "source": "pr-review-canvas",
       "path": "pr-review-canvas/skills/pr-review-canvas",
-      "vendoredFrom": "7314f723a487ec406b6369fe5865ba034cfed166",
+      "vendoredFrom": "ccb5507cec1546dc88135c1139c811e6c59115ba",
       "modified": true,
       "note": "Renamed the skill from pr-review-canvas to code-review-canvas, set disable-model-invocation so it runs only when named, retargeted it from a GitHub PR to the local branch vs the default branch, and required technical-writing and unslop for canvas copy. Keep these during an update.",
       "harnesses": [
@@ -115,7 +115,7 @@
       "origin": "vendored",
       "source": "mattpocock-skills",
       "path": "skills/engineering/codebase-design",
-      "vendoredFrom": "3cca18b368ae95cdbdebbff572ccafa662551015",
+      "vendoredFrom": "b0618bc436ad893b3c5e84e55fba86586d34a404",
       "modified": false
     },
     "commbank-archive": {
@@ -142,7 +142,7 @@
       "origin": "vendored",
       "source": "anthropic-skills",
       "path": "skills/frontend-design",
-      "vendoredFrom": "41bbe19d1a1a7eaab5e7bb9050a417e5c6cffc8f",
+      "vendoredFrom": "683bc88e56f3e09ba94f7055977f3d3aa499f202",
       "modified": false,
       "localFiles": [
         "agents/openai.yaml"
@@ -160,14 +160,14 @@
       "origin": "vendored",
       "source": "mattpocock-skills",
       "path": "skills/productivity/grilling",
-      "vendoredFrom": "3cca18b368ae95cdbdebbff572ccafa662551015",
+      "vendoredFrom": "b0618bc436ad893b3c5e84e55fba86586d34a404",
       "modified": false
     },
     "technical-writing": {
       "origin": "vendored",
       "source": "pstack",
       "path": "pstack/skills/technical-writing",
-      "vendoredFrom": "7314f723a487ec406b6369fe5865ba034cfed166",
+      "vendoredFrom": "ccb5507cec1546dc88135c1139c811e6c59115ba",
       "modified": true,
       "note": "Removed disable-model-invocation from SKILL.md so the model can invoke it. Keep it removed during an update.",
       "localFiles": [
@@ -178,7 +178,7 @@
       "origin": "vendored",
       "source": "pstack",
       "path": "pstack/skills/typescript-best-practices",
-      "vendoredFrom": "7314f723a487ec406b6369fe5865ba034cfed166",
+      "vendoredFrom": "ccb5507cec1546dc88135c1139c811e6c59115ba",
       "modified": true,
       "note": "Removed disable-model-invocation so the model can invoke the skill, and retargeted standalone principle-skill references to reference files in engineering-principles. Keep these changes during updates.",
       "localFiles": [
@@ -199,7 +199,7 @@
       "origin": "vendored",
       "source": "pstack",
       "path": "pstack/skills/unslop",
-      "vendoredFrom": "7314f723a487ec406b6369fe5865ba034cfed166",
+      "vendoredFrom": "ccb5507cec1546dc88135c1139c811e6c59115ba",
       "modified": true,
       "note": "Removed disable-model-invocation from SKILL.md so the model can invoke it. Keep it removed during an update.",
       "localFiles": [
@@ -210,7 +210,7 @@
       "origin": "vendored",
       "source": "mattpocock-skills",
       "path": "skills/productivity/writing-for-agents",
-      "vendoredFrom": "3cca18b368ae95cdbdebbff572ccafa662551015",
+      "vendoredFrom": "b0618bc436ad893b3c5e84e55fba86586d34a404",
       "modified": false
     },
     "walk-me-through": {
@@ -223,7 +223,7 @@
       "origin": "vendored",
       "source": "mattpocock-skills",
       "path": "skills/engineering/wayfinder",
-      "vendoredFrom": "3cca18b368ae95cdbdebbff572ccafa662551015",
+      "vendoredFrom": "b0618bc436ad893b3c5e84e55fba86586d34a404",
       "modified": false,
       "allowModelInvocation": false
     }
