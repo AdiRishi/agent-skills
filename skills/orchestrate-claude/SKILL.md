@@ -37,7 +37,7 @@ Make each brief self-contained. State the result you need, the decisions already
 
 Ask for each conclusion with its evidence: a file path with a line number, a short quote, or a command result. A cheap reader can summarize away the detail that mattered, and the citation lets you check the source. Keep quotes to the lines that support the conclusion.
 
-Tell Sonnet and Haiku subagents to do the assignment themselves and spawn no subagents of their own. When an Opus subagent leads a workstream, copy the model table and the brief rules into its brief, and name the models it may spawn.
+Tell Sonnet and Haiku subagents to do the assignment themselves and spawn no subagents of their own. When an Opus subagent leads a workstream, tell it to fan out the independent pieces to subagents of its own. A subagent's default prompt tells it to do the work itself, so the brief must grant this. Copy the model table and the brief rules into its brief, and name the models it may spawn.
 
 For parallel edits, give each subagent its own files. Settle shared interfaces before you assign the code that uses them. Subagents share the working directory, so run assignments that change the same files one after another.
 
