@@ -1020,8 +1020,10 @@ async function updateVendoredSkills(root, manifest, dryRun) {
 			git(["fetch", "--quiet", "origin", source.ref], repository);
 			const upstreamCommit = git(["rev-parse", "FETCH_HEAD"], repository);
 
-			const license = git(["show", `${upstreamCommit}:${source.upstreamLicensePath}`], repository);
-			prepared.push({ type: "file", destination: repositoryPath(root, source.licenseFile), content: `${license}\n` });
+			const license = runOrFail("git", ["show", `${upstreamCommit}:${source.upstreamLicensePath}`], {
+				cwd: repository,
+			});
+			prepared.push({ type: "file", destination: repositoryPath(root, source.licenseFile), content: license });
 
 			for (const [name, skill] of Object.entries(manifest.skills)) {
 				if (skill.origin !== "vendored" || skill.source !== sourceName) continue;
