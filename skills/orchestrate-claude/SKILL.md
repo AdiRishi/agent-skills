@@ -18,7 +18,7 @@ Assign a feature and its tests to one subagent. A split between planning, implem
 
 ## Pick the model
 
-A subagent inherits your model unless the Agent call names one. An Agent call without `model` from this session runs on Fable. Pass `model` on every Agent call, and pass `effort` where the table sets one.
+A subagent inherits your model unless the Agent call names one. In a Fable session, an Agent call without `model` spawns Fable. Pass `model` on every Agent call, and pass `effort` where the table sets one.
 
 | `model`  | `effort` | Assign                                                                                                                                             |
 | -------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -37,7 +37,7 @@ Make each brief self-contained. State the result you need, the decisions already
 
 Ask for each conclusion with its evidence: a file path with a line number, a short quote, or a command result. A cheap reader can summarize away the detail that mattered, and the citation lets you check the source. Keep quotes to the lines that support the conclusion.
 
-Tell Sonnet and Haiku subagents to do the assignment themselves and spawn no subagents of their own. When an Opus subagent leads a workstream, tell it to fan out the independent pieces to subagents of its own. A subagent's default prompt tells it to do the work itself, so the brief must grant this. Copy the model table and the brief rules into its brief, and name the models it may spawn.
+Tell Sonnet and Haiku subagents to do the assignment themselves and spawn no subagents of their own. When an Opus subagent leads a workstream, give it the path to this `SKILL.md` and tell it to apply the skill to its workstream as the coordinator. The skill's rules decide when it fans out and when it does the work itself. Its default prompt tells it to do the work itself, so the brief must grant permission to spawn. Name the models it may spawn.
 
 For parallel edits, give each subagent its own files. Settle shared interfaces before you assign the code that uses them. Subagents share the working directory, so run assignments that change the same files one after another.
 
