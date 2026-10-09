@@ -171,7 +171,7 @@ async function createFixture(t, options = {}) {
 	await initializeGitRepository(setup);
 	await commit(setup, "setup fixture");
 
-	await write(join(upstream, "LICENSE"), "new license\n");
+	await write(join(upstream, "LICENSE"), "\n    new license\n");
 	await write(join(upstream, "skills", "plain", "SKILL.md"), plainSkill("New upstream."));
 	await rm(join(upstream, "skills", "plain", "OBSOLETE.md"));
 	await write(join(upstream, "skills", "plain", "NEW.md"), "new file\n");
@@ -283,7 +283,10 @@ test("update mirrors upstream, preserves local files, and merges declared change
 	const custom = await readFile(join(setup, "skills", "custom", "SKILL.md"), "utf8");
 	assert.match(custom, /Local choice\./u);
 	assert.match(custom, /Upstream choice\./u);
-	assert.equal(await readFile(join(setup, "licenses", "upstream.txt"), "utf8"), "new license\n");
+	assert.equal(
+		await readFile(join(setup, "licenses", "upstream.txt"), "utf8"),
+		"\n    new license\n",
+	);
 
 	const manifest = JSON.parse(await readFile(join(setup, "agent-setup.json"), "utf8"));
 	assert.equal(manifest.skills.plain.vendoredFrom, newCommit);
