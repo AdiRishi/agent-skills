@@ -163,6 +163,15 @@
       "vendoredFrom": "b0618bc436ad893b3c5e84e55fba86586d34a404",
       "modified": false
     },
+    "orchestrate-claude": {
+      "origin": "custom",
+      "author": "Adishwar Rishi",
+      "license": "MIT",
+      "harnesses": [
+        "claude-code"
+      ],
+      "allowModelInvocation": false
+    },
     "technical-writing": {
       "origin": "vendored",
       "source": "pstack",
