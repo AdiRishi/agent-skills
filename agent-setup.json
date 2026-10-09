@@ -124,15 +124,6 @@
       "license": "MIT",
       "allowModelInvocation": false
     },
-    "delegate": {
-      "origin": "custom",
-      "author": "Adishwar Rishi",
-      "license": "MIT",
-      "harnesses": [
-        "codex"
-      ],
-      "allowModelInvocation": false
-    },
     "engineering-principles": {
       "origin": "custom",
       "author": "Adishwar Rishi",

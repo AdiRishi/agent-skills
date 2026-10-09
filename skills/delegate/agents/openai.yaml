@@ -1,5 +1,0 @@
-interface:
-  display_name: "Delegate"
-  short_description: "Lead the task with Sol execution workers"
-policy:
-  allow_implicit_invocation: false
