@@ -118,12 +118,6 @@
       "vendoredFrom": "b0618bc436ad893b3c5e84e55fba86586d34a404",
       "modified": false
     },
-    "commbank-archive": {
-      "origin": "custom",
-      "author": "Adishwar Rishi",
-      "license": "MIT",
-      "allowModelInvocation": false
-    },
     "engineering-principles": {
       "origin": "custom",
       "author": "Adishwar Rishi",
