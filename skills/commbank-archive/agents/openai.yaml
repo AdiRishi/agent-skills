@@ -1,7 +1,0 @@
-interface:
-  display_name: "Commbank archive"
-  short_description: "Export and maintain the numbered Commbank archive"
-  default_prompt: "Use $commbank-archive to update the tracked Commbank accounts through the end of last month."
-
-policy:
-  allow_implicit_invocation: false
