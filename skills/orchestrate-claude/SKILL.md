@@ -22,7 +22,7 @@ The main coordinator may choose any available model suited to the assignment, in
 
 Prefer Opus for code, implementation, and work that draws conclusions, even when Sonnet could complete the assignment. This is a preference for stronger judgment over the lowest model cost.
 
-Choose each subagent's model explicitly. Use these model and effort defaults as starting points for the assignment:
+Choose each subagent's model and effort explicitly using these defaults:
 
 | `model`  | `effort` | Assign |
 | -------- | -------- | ------ |
@@ -30,8 +30,6 @@ Choose each subagent's model explicitly. Use these model and effort defaults as 
 | `sonnet` | `high`   | Find, read, and organize sources. Return evidence and source summaries, leaving synthesis and conclusions to the coordinator or an Opus subagent. |
 | `haiku`  | `xhigh`  | Focused search, extraction, lists, and classifications with straightforward checks. |
 | `fable`  | `medium` | Rarely. A specifically justified difficult investigation or another perspective on a consequential question. |
-
-Pass `effort: "high"` explicitly for Opus subagents, even when the coordinator runs at a higher effort. Use Sonnet and Haiku where gathering the evidence can be separated from judging what it means.
 
 Search directly when you already know the file or symbol. Haiku suits finding call sites or extracting facts. Assign interpretation of an undocumented lifecycle to Opus even when every action is a read.
 
