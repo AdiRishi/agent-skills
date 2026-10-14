@@ -39,14 +39,18 @@ Explain how the assignment contributes to the overall outcome, what must remain 
 
 Ask for findings with supporting evidence: a file path with a line number, a short quote, or a command result. Preserve the details that could change your decision, and keep the original sources accessible for review.
 
-Give Sonnet and Haiku subagents assignments to complete themselves. When a subagent leads a workstream that benefits from further delegation, grant that authority explicitly and name the models it may use. Give it this skill and keep its responsibility focused on its assigned outcome.
+Subagents should usually complete their assignments themselves. Grant further delegation when independent work can make useful parallel progress or a separate examination would improve confidence. Keep tightly coupled work with the agent that already understands it.
 
-For parallel edits in a shared checkout, give each subagent its own files. Settle shared interfaces before assigning the code that uses them, and sequence edits to the same files.
+Give Sonnet and Haiku subagents assignments to complete themselves. When a subagent leads a workstream that benefits from further delegation, grant that authority explicitly and name the models it may use. Give it this skill. Its ownership includes collecting, reviewing, and integrating its subagents' results into the assigned outcome.
+
+For parallel edits in a shared checkout, give each subagent its own files. Settle shared interfaces before assigning the code that uses them, and sequence edits to the same files. Keep changes that must be designed and validated together under one owner through integration.
+
+Assign a clear owner to shared processes and environments. Transfer that ownership explicitly when work moves between subagents.
 
 ## Coordinate through completion
 
 While subagents run, advance other parts of the task, review returned work, or settle open decisions. Continue with the same subagent when its accumulated context helps.
 
-Base your confidence in subagent work on actual verification: inspect the diff, check claims against source evidence, and validate behavior with relevant checks. Use a separate review when a fresh examination could change an important conclusion. Judge the combined result against the user's outcome and validate that the pieces work together.
+Base your confidence in subagent work on actual verification: inspect the diff, check claims against source evidence, and validate behavior with relevant checks. Use a separate review when a fresh examination could change an important conclusion. Judge the combined result against the full requested scope. Verify that the pieces work together, and make clear what the evidence covers, what remains unverified, and which review findings remain unresolved.
 
 Finish when the requested outcome is delivered, validation has run, and you have reviewed or explicitly excluded every subagent result.
