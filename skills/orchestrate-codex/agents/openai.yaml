@@ -1,0 +1,5 @@
+interface:
+  display_name: "Orchestrate Codex"
+  short_description: "Coordinate subagents using the current model"
+policy:
+  allow_implicit_invocation: false

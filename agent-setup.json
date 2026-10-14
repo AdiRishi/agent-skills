@@ -157,6 +157,15 @@
       ],
       "allowModelInvocation": false
     },
+    "orchestrate-codex": {
+      "origin": "custom",
+      "author": "Adishwar Rishi",
+      "license": "MIT",
+      "harnesses": [
+        "codex"
+      ],
+      "allowModelInvocation": false
+    },
     "technical-writing": {
       "origin": "vendored",
       "source": "pstack",
