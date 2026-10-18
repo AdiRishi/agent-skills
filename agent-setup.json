@@ -202,9 +202,9 @@
       "origin": "vendored",
       "source": "pstack",
       "path": "pstack/skills/unslop",
-      "vendoredFrom": "ccb5507cec1546dc88135c1139c811e6c59115ba",
+      "vendoredFrom": "4382e687a50b8d2c5ce4d141d001186589cff8d5",
       "modified": true,
-      "note": "Removed disable-model-invocation from SKILL.md so the model can invoke it. Keep it removed during an update.",
+      "note": "Removed disable-model-invocation from SKILL.md so the model can invoke it, and kept \"Must always apply.\" in the description so the model loads it for all writing. Upstream dropped that sentence in bc697d0. Keep both changes during an update.",
       "localFiles": [
         "agents/openai.yaml"
       ]
