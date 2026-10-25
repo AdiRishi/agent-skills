@@ -16,7 +16,7 @@ Give one general-purpose subagent the scope, repository path, applicable instruc
 
 Instruct the subagent to invoke Claude Code's built-in `code-review` skill with `high` effort and the resolved target. Use the Skill tool, not a shell command or a similarly named plugin. Run the complete review without `--fix` or `--comment`. Keep the review read-only and return findings to the main conversation. If the built-in skill is unavailable, report that blocker rather than substitute another review.
 
-Allow the reviewer to use the built-in workflow's subagents when available. When nested delegation is unavailable, follow the built-in workflow's sequential review instructions within the reviewer.
+Have the reviewer perform every review and verification step itself, sequentially. Do not launch nested subagents, even if the built-in workflow requests them.
 
 Wait for the completed review. Require each finding's location, claimed defect or maintenance cost, and supporting evidence. An interrupted or partial review is unfinished work, not a clean result.
 
