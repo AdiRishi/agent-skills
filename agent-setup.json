@@ -99,6 +99,15 @@
     }
   },
   "skills": {
+    "claude-code-review": {
+      "origin": "custom",
+      "author": "Adishwar Rishi",
+      "license": "MIT",
+      "harnesses": [
+        "claude-code"
+      ],
+      "allowModelInvocation": false
+    },
     "code-review-canvas": {
       "origin": "vendored",
       "source": "pr-review-canvas",
