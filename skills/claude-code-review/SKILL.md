@@ -1,42 +1,38 @@
 ---
 name: claude-code-review
-description: Run Claude Code's forked review, validate which findings deserve changes, and fix the accepted findings.
+description: Review the current change, validate which findings deserve a fix, and apply the accepted fixes.
 disable-model-invocation: true
 ---
 
 # Claude Code review
 
-Run the built-in review from the main conversation. Claude Code forks the review into its own context. Validate the returned findings in the main conversation, then delegate the accepted fixes.
+Review the current change with Claude Code's built-in `code-review` skill at `high` effort. Judge the findings against the code and the user's intent before making changes. Complete the review, triage, and accepted fixes in one workflow.
+
+## Establish the scope and intent
+
+Review the current task's committed and uncommitted changes, including relevant untracked files. Resolve the scope from the conversation and repository. Identify the base revision and included files. Ask only when the available context leaves materially different scopes possible.
+
+Establish what the change must accomplish, what it deliberately breaks or removes, and what is out of scope. Use the conversation, requirements, and repository evidence. Keep unsettled requirements explicit, and carry this context into triage.
 
 ## Run the review
 
-Review the current task's committed and uncommitted changes, including relevant untracked files. Resolve the scope from the conversation and repository. Identify the base revision and included files before invocation. Ask only when the conversation and repository leave materially different scopes possible.
+Invoke the built-in `code-review` through the Skill tool with `high` effort and the resolved target. Omit `--fix` and `--comment` so findings are assessed before any code changes or publication. If the built-in skill is unavailable, report that blocker.
 
-Prepare a short review brief with the scope, repository path, applicable instructions, and purpose of the change. Include deliberate breaking changes, removed behavior, and decisions already settled with the user. Keep unknown requirements explicit.
-
-Invoke Claude Code's built-in `code-review` directly through the Skill tool. Do not launch an Agent to invoke it. Set `skill` to `code-review` and start `args` with `high`, followed by the resolved target and the review brief. Include the brief in `args`, because the fork receives that text but does not inherit the main conversation.
-
-Include this instruction in the brief: "Complete every review and verification step yourself, sequentially. Do not launch subagents, even if the built-in workflow requests them. Keep the review read-only and return findings with their locations and supporting evidence."
-
-Omit `--fix` and `--comment` from the invocation. If the built-in skill is unavailable, report that blocker rather than substitute another review.
-
-Wait for the completed review. Require each finding's location, claimed defect or maintenance cost, and supporting evidence. An interrupted or partial review is unfinished work, not a clean result.
+Complete the review before triage. Each finding needs a location, a claimed defect or maintenance cost, and supporting evidence. An interrupted or partial review is unfinished work, not a clean result.
 
 ## Decide what deserves a fix
 
-In the main conversation, use the Read tool to read `${CLAUDE_SKILL_DIR}/TRIAGE.md`. Apply its criteria to every returned finding against the code and the user's intent. Treat the review's confidence and severity as claims to check.
+Read `${CLAUDE_SKILL_DIR}/TRIAGE.md` and apply its criteria to every finding. Treat the review's confidence and severity as claims to check.
 
-Inspect the relevant callers, guards, contracts, and tests before accepting a finding. For a rejected finding, cite the evidence or requirement that defeats it. If a focused investigation would settle an uncertain claim, delegate that investigation before deciding.
+Inspect the relevant callers, guards, contracts, and tests before accepting a finding. Investigate uncertain claims when the repository can settle them. Record a disposition and a short, evidence-backed reason for each finding.
 
-Finish with a disposition and a short reason for every finding. Fix accepted findings without another approval round. Ask the user only about unresolved requirements that change the decision, and continue with independent accepted fixes.
+Proceed with accepted fixes without another approval round. Ask the user only about unresolved requirements that change the decision, and continue with independent accepted fixes.
 
-## Delegate the fixes
+## Fix and verify
 
-If any findings qualify, give one general-purpose subagent the accepted findings, supporting evidence, intended behavior, and files it may change. Keep rejected findings out of its assignment.
+Delegate the accepted findings to a fixer with their evidence, intended behavior, and permitted scope. Have the fixer make the smallest complete correction, preserve unrelated work, and run the relevant checks. Add a regression test when it protects meaningful behavior, and name the failure it catches.
 
-Have the fixer make the smallest complete correction and run the relevant checks. Add a regression test when it protects meaningful behavior, and name the failure it catches. Preserve unrelated work. If the code disproves a finding or the fix requires a new product decision, return the evidence to the main conversation before expanding the change.
-
-Inspect the resulting diff and validation results. Confirm that each accepted finding is resolved and that the changes preserve the intended behavior. If the reviewed code changed in the meantime, revalidate affected findings against the current version.
+If implementation disproves a finding or reveals an unsettled requirement, reassess it before expanding the change. Inspect the resulting diff and check results. Confirm that each accepted finding is resolved and the intended behavior is preserved. Revalidate affected findings if the reviewed code has changed in the meantime.
 
 ## Report the result
 
