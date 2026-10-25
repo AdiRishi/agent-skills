@@ -14,7 +14,7 @@ Review the current task's committed and uncommitted changes, including relevant 
 
 Prepare a short review brief with the scope, repository path, applicable instructions, and purpose of the change. Include deliberate breaking changes, removed behavior, and decisions already settled with the user. Keep unknown requirements explicit.
 
-Invoke Claude Code's built-in `code-review` directly through the Skill tool. Do not launch an Agent to invoke it. Set `skill` to `code-review` and start `args` with `high`, followed by the resolved target and the review brief. Claude Code includes that text in the fork's review prompt. The brief must be in `args`, because the fork does not inherit the main conversation. These are internal tool arguments. The user invokes this skill without arguments.
+Invoke Claude Code's built-in `code-review` directly through the Skill tool. Do not launch an Agent to invoke it. Set `skill` to `code-review` and start `args` with `high`, followed by the resolved target and the review brief. Include the brief in `args`, because the fork receives that text but does not inherit the main conversation.
 
 Include this instruction in the brief: "Complete every review and verification step yourself, sequentially. Do not launch subagents, even if the built-in workflow requests them. Keep the review read-only and return findings with their locations and supporting evidence."
 
@@ -24,7 +24,7 @@ Wait for the completed review. Require each finding's location, claimed defect o
 
 ## Decide what deserves a fix
 
-Read [TRIAGE.md](TRIAGE.md) and assess every returned finding against the code and the user's intent. Treat the review's confidence and severity as claims to check.
+In the main conversation, use the Read tool to read `${CLAUDE_SKILL_DIR}/TRIAGE.md`. Apply its criteria to every returned finding against the code and the user's intent. Treat the review's confidence and severity as claims to check.
 
 Inspect the relevant callers, guards, contracts, and tests before accepting a finding. For a rejected finding, cite the evidence or requirement that defeats it. If a focused investigation would settle an uncertain claim, delegate that investigation before deciding.
 
