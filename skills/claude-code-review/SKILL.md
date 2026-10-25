@@ -1,22 +1,24 @@
 ---
 name: claude-code-review
-description: Delegate a Claude Code review, validate which findings deserve changes, and fix the accepted findings.
+description: Run Claude Code's forked review, validate which findings deserve changes, and fix the accepted findings.
 disable-model-invocation: true
 ---
 
 # Claude Code review
 
-Keep the main conversation responsible for intent and judgment. Delegate the full review to a subagent, validate its findings, then delegate the accepted fixes.
+Run the built-in review from the main conversation. Claude Code forks the review into its own context. Validate the returned findings in the main conversation, then delegate the accepted fixes.
 
-## Brief the reviewer
+## Run the review
 
-Review the current task's committed and uncommitted changes, including relevant untracked files. Resolve the scope from the conversation and repository. Identify the base revision and included files before dispatch. Ask only when the conversation and repository leave materially different scopes possible.
+Review the current task's committed and uncommitted changes, including relevant untracked files. Resolve the scope from the conversation and repository. Identify the base revision and included files before invocation. Ask only when the conversation and repository leave materially different scopes possible.
 
-Give one general-purpose subagent the scope, repository path, applicable instructions, and the purpose of the change. Include deliberate breaking changes, removed behavior, and decisions already settled with the user. Keep unknown requirements explicit.
+Prepare a short review brief with the scope, repository path, applicable instructions, and purpose of the change. Include deliberate breaking changes, removed behavior, and decisions already settled with the user. Keep unknown requirements explicit.
 
-Instruct the subagent to invoke Claude Code's built-in `code-review` skill with `high` effort and the resolved target. Use the Skill tool, not a shell command or a similarly named plugin. Run the complete review without `--fix` or `--comment`. Keep the review read-only and return findings to the main conversation. If the built-in skill is unavailable, report that blocker rather than substitute another review.
+Invoke Claude Code's built-in `code-review` directly through the Skill tool. Do not launch an Agent to invoke it. Set `skill` to `code-review` and start `args` with `high`, followed by the resolved target and the review brief. Claude Code includes that text in the fork's review prompt. The brief must be in `args`, because the fork does not inherit the main conversation. These are internal tool arguments. The user invokes this skill without arguments.
 
-Have the reviewer perform every review and verification step itself, sequentially. Do not launch nested subagents, even if the built-in workflow requests them.
+Include this instruction in the brief: "Complete every review and verification step yourself, sequentially. Do not launch subagents, even if the built-in workflow requests them. Keep the review read-only and return findings with their locations and supporting evidence."
+
+Omit `--fix` and `--comment` from the invocation. If the built-in skill is unavailable, report that blocker rather than substitute another review.
 
 Wait for the completed review. Require each finding's location, claimed defect or maintenance cost, and supporting evidence. An interrupted or partial review is unfinished work, not a clean result.
 
@@ -30,7 +32,7 @@ Finish with a disposition and a short reason for every finding. Fix accepted fin
 
 ## Delegate the fixes
 
-If any findings qualify, give a second general-purpose subagent the accepted findings, supporting evidence, intended behavior, and files it may change. Keep rejected findings out of its assignment.
+If any findings qualify, give one general-purpose subagent the accepted findings, supporting evidence, intended behavior, and files it may change. Keep rejected findings out of its assignment.
 
 Have the fixer make the smallest complete correction and run the relevant checks. Add a regression test when it protects meaningful behavior, and name the failure it catches. Preserve unrelated work. If the code disproves a finding or the fix requires a new product decision, return the evidence to the main conversation before expanding the change.
 
