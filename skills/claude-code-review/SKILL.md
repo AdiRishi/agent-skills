@@ -2,7 +2,6 @@
 name: claude-code-review
 description: Delegate a Claude Code review, validate which findings deserve changes, and fix the accepted findings.
 disable-model-invocation: true
-argument-hint: "[review target or guidance]"
 ---
 
 # Claude Code review
@@ -11,7 +10,7 @@ Keep the main conversation responsible for intent and judgment. Delegate the ful
 
 ## Brief the reviewer
 
-Resolve the review scope from `$ARGUMENTS` and the current task. Without an explicit target, review the current task's committed and uncommitted changes, including relevant untracked files. Identify the base revision and included files before dispatch. Ask only when the conversation and repository leave materially different scopes possible.
+Review the current task's committed and uncommitted changes, including relevant untracked files. Resolve the scope from the conversation and repository. Identify the base revision and included files before dispatch. Ask only when the conversation and repository leave materially different scopes possible.
 
 Give one general-purpose subagent the scope, repository path, applicable instructions, and the purpose of the change. Include deliberate breaking changes, removed behavior, and decisions already settled with the user. Keep unknown requirements explicit.
 
