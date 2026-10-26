@@ -96,6 +96,14 @@
       "license": "MIT",
       "licenseFile": "licenses/typesafe-ai-skills-MIT.txt",
       "upstreamLicensePath": "LICENSE"
+    },
+    "tstack": {
+      "repo": "https://github.com/t3dotgg/tstack",
+      "ref": "main",
+      "author": "Theo Browne",
+      "license": "MIT",
+      "licenseFile": "licenses/tstack-MIT.txt",
+      "upstreamLicensePath": "LICENSE"
     }
   },
   "skills": {
@@ -132,6 +140,21 @@
       "author": "Adishwar Rishi",
       "license": "MIT"
     },
+    "file-pr": {
+      "origin": "vendored",
+      "source": "tstack",
+      "path": "skills/file-pr",
+      "vendoredFrom": "7de017b3fc9d50c03cf3ecb98fb71e0ca65a78bd",
+      "modified": false,
+      "harnesses": [
+        "claude-code",
+        "codex",
+        "cursor"
+      ],
+      "localFiles": [
+        "agents/openai.yaml"
+      ]
+    },
     "frontend-design": {
       "origin": "vendored",
       "source": "anthropic-skills",
@@ -156,6 +179,18 @@
       "path": "skills/productivity/grilling",
       "vendoredFrom": "49dd158d1076134a641b33efb035946536778336",
       "modified": false
+    },
+    "leaving-pr-comments": {
+      "origin": "vendored",
+      "source": "tstack",
+      "path": "skills/leaving-pr-comments",
+      "vendoredFrom": "7de017b3fc9d50c03cf3ecb98fb71e0ca65a78bd",
+      "modified": false,
+      "harnesses": [
+        "claude-code",
+        "codex",
+        "cursor"
+      ]
     },
     "orchestrate-claude": {
       "origin": "custom",
