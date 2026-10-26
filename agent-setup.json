@@ -107,6 +107,21 @@
     }
   },
   "skills": {
+    "babysit-pr": {
+      "origin": "vendored",
+      "source": "tstack",
+      "path": "skills/babysit-pr",
+      "vendoredFrom": "7de017b3fc9d50c03cf3ecb98fb71e0ca65a78bd",
+      "modified": false,
+      "harnesses": [
+        "claude-code",
+        "codex",
+        "cursor"
+      ],
+      "localFiles": [
+        "agents/openai.yaml"
+      ]
+    },
     "claude-code-review": {
       "origin": "custom",
       "author": "Adishwar Rishi",
