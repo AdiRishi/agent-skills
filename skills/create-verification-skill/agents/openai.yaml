@@ -1,0 +1,5 @@
+interface:
+  display_name: "Create Verification Skill"
+  short_description: "Generate a project skill that drives and verifies your app"
+policy:
+  allow_implicit_invocation: false

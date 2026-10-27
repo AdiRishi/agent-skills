@@ -1,0 +1,5 @@
+interface:
+  display_name: "Statechart"
+  short_description: "Draw system behavior as a statechart from a TLA+ model"
+policy:
+  allow_implicit_invocation: false

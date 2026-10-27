@@ -130,6 +130,29 @@
       "vendoredFrom": "49dd158d1076134a641b33efb035946536778336",
       "modified": false
     },
+    "create-formal-verification-skill": {
+      "origin": "vendored",
+      "source": "pstack",
+      "path": "pstack/skills/create-formal-verification-skill",
+      "vendoredFrom": "ab69380dd50ee47d426b35cb8369cffdddafc218",
+      "modified": false,
+      "localFiles": [
+        "agents/openai.yaml"
+      ],
+      "allowModelInvocation": false
+    },
+    "create-verification-skill": {
+      "origin": "vendored",
+      "source": "pstack",
+      "path": "pstack/skills/create-verification-skill",
+      "vendoredFrom": "ab69380dd50ee47d426b35cb8369cffdddafc218",
+      "modified": true,
+      "note": "Retargeted the generated verify skill from .cursor/skills to .agents/skills. Keep this during an update.",
+      "localFiles": [
+        "agents/openai.yaml"
+      ],
+      "allowModelInvocation": false
+    },
     "engineering-principles": {
       "origin": "custom",
       "author": "Adishwar Rishi",
@@ -187,6 +210,29 @@
         "cursor"
       ]
     },
+    "maintain-formal-verification-skill": {
+      "origin": "vendored",
+      "source": "pstack",
+      "path": "pstack/skills/maintain-formal-verification-skill",
+      "vendoredFrom": "ab69380dd50ee47d426b35cb8369cffdddafc218",
+      "modified": false,
+      "localFiles": [
+        "agents/openai.yaml"
+      ],
+      "allowModelInvocation": false
+    },
+    "maintain-verification-skill": {
+      "origin": "vendored",
+      "source": "pstack",
+      "path": "pstack/skills/maintain-verification-skill",
+      "vendoredFrom": "ab69380dd50ee47d426b35cb8369cffdddafc218",
+      "modified": true,
+      "note": "Looks for the verify skill under .agents/skills instead of .cursor/skills. Keep this during an update.",
+      "localFiles": [
+        "agents/openai.yaml"
+      ],
+      "allowModelInvocation": false
+    },
     "orchestrate-claude": {
       "origin": "custom",
       "author": "Adishwar Rishi",
@@ -202,6 +248,17 @@
       "license": "MIT",
       "harnesses": [
         "codex"
+      ],
+      "allowModelInvocation": false
+    },
+    "statechart": {
+      "origin": "vendored",
+      "source": "pstack",
+      "path": "pstack/skills/statechart",
+      "vendoredFrom": "ab69380dd50ee47d426b35cb8369cffdddafc218",
+      "modified": false,
+      "localFiles": [
+        "agents/openai.yaml"
       ],
       "allowModelInvocation": false
     },
