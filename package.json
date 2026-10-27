@@ -5,7 +5,7 @@
   "packageManager": "pnpm@10.33.4",
   "scripts": {
     "check": "node scripts/agent-setup.mjs check --repository-only",
-    "test": "node --test"
+    "test": "node --test \"test/*.test.mjs\""
   },
   "engines": {
     "node": ">=22"
