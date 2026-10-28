@@ -63,3 +63,9 @@ Name branches with the Conventional Branch format, `<type>/<description>`, unles
 ### Commits
 
 Commit at meaningful, reviewable checkpoints. Keep unrelated changes separate. Use messages that describe the behavior or design change, and order commits so the history explains the implementation.
+
+### Pushes
+
+Pushes to an open PR can trigger paid reviews. Keep related commits local while you work through the current task or set of feedback. Push them together once that work is complete and local checks pass. Judge that point from the conversation and push without asking for permission or waiting for hypothetical feedback.
+
+Push sooner when remote checks are needed to continue, a collaborator needs the commits, or Adi explicitly asks.
