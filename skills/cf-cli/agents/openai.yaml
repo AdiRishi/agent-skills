@@ -1,0 +1,3 @@
+interface:
+  display_name: "Cloudflare CLI"
+  short_description: "Find and run Cloudflare commands with the cf CLI"

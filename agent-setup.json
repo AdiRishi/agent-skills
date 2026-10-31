@@ -96,6 +96,14 @@
       "license": "MIT",
       "licenseFile": "licenses/tstack-MIT.txt",
       "upstreamLicensePath": "LICENSE"
+    },
+    "cloudflare-skills": {
+      "repo": "https://github.com/cloudflare/skills",
+      "ref": "main",
+      "author": "Cloudflare",
+      "license": "Apache-2.0",
+      "licenseFile": "licenses/cloudflare-skills-Apache-2.0.txt",
+      "upstreamLicensePath": "LICENSE"
     }
   },
   "skills": {
@@ -110,6 +118,16 @@
         "codex",
         "cursor"
       ],
+      "localFiles": [
+        "agents/openai.yaml"
+      ]
+    },
+    "cf-cli": {
+      "origin": "vendored",
+      "source": "cloudflare-skills",
+      "path": "skills/cf-cli",
+      "vendoredFrom": "e44f580f9c4fa3bf268e284ae7706c7954ba31fd",
+      "modified": false,
       "localFiles": [
         "agents/openai.yaml"
       ]
