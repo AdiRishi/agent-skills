@@ -56,6 +56,14 @@ Do not narrate what the next line does. Do not mention the current task, a calle
 
 Keep existing comments accurate when behavior changes.
 
+### Cloudflare
+
+Use the `cf` CLI and the `cf-cli` skill for Cloudflare work. In a project that has `wrangler.jsonc`, `wrangler.json`, or `wrangler.toml` and no `cloudflare.config.ts`, use Wrangler for `dev`, `build`, and `deploy`.
+
+If a project defines its Cloudflare infrastructure as code, such as an Alchemy stack, deploy and change that infrastructure through the project's own patterns instead of `cf deploy`, `cf migrate`, or `cf init`. Use `cf` there to inspect remote resources, read logs and analytics, and handle one-off tasks the code does not manage.
+
+Confirm the target account before a `cf` command changes a resource.
+
 ### Branches
 
 Name branches with the Conventional Branch format, `<type>/<description>`, unless the project has its own convention. Take the type from Conventional Commits, such as `feat`, `fix`, `refactor`, `docs`, `test`, or `chore`. Write the description in kebab-case and name the change, such as `fix/expired-webhook-retries` or `feat/vendored-skill-updates`.
