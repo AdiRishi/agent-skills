@@ -104,6 +104,14 @@
       "license": "Apache-2.0",
       "licenseFile": "licenses/cloudflare-skills-Apache-2.0.txt",
       "upstreamLicensePath": "LICENSE"
+    },
+    "hugorcd-hr-folio": {
+      "repo": "https://github.com/HugoRCD/hr-folio",
+      "ref": "main",
+      "author": "HugoRCD",
+      "license": "Apache-2.0",
+      "licenseFile": "licenses/hugorcd-hr-folio-Apache-2.0.txt",
+      "upstreamLicensePath": "LICENSE"
     }
   },
   "skills": {
@@ -268,6 +276,16 @@
         "codex"
       ],
       "allowModelInvocation": false
+    },
+    "pr-writing": {
+      "origin": "vendored",
+      "source": "hugorcd-hr-folio",
+      "path": "skills/pr-writing",
+      "vendoredFrom": "f296fa2b7364a62b9e985f1c9d2f69be0654b857",
+      "modified": false,
+      "localFiles": [
+        "agents/openai.yaml"
+      ]
     },
     "statechart": {
       "origin": "vendored",
