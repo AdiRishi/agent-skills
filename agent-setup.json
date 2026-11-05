@@ -189,7 +189,8 @@
       "source": "tstack",
       "path": "skills/file-pr",
       "vendoredFrom": "7de017b3fc9d50c03cf3ecb98fb71e0ca65a78bd",
-      "modified": false,
+      "modified": true,
+      "note": "Moved the description opening guidance and examples to pr-writing. Keep the reference to that skill during updates.",
       "harnesses": [
         "claude-code",
         "codex",
@@ -282,7 +283,13 @@
       "source": "hugorcd-hr-folio",
       "path": "skills/pr-writing",
       "vendoredFrom": "f296fa2b7364a62b9e985f1c9d2f69be0654b857",
-      "modified": false,
+      "modified": true,
+      "note": "Keep the description limited to invocation conditions. Preserve the three sections: file-pr's simple opening and examples, optional reviewer details with good/bad examples, and the upstream evidence table. Keep technical explanations in the details section. Omit upstream AI attribution, approval requirements, ELI5, browser-tool recommendations, Keep it honest, and the final checklist.",
+      "harnesses": [
+        "claude-code",
+        "codex",
+        "cursor"
+      ],
       "localFiles": [
         "agents/openai.yaml"
       ]
