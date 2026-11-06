@@ -37,6 +37,10 @@ Skills are model-invoked by default. Make a skill user-invoked only when Adi wan
 3. For a skill copied from another repository, copy the upstream folder unchanged first. Set `upstream` to the folder's GitHub tree URL at the copied commit, then describe every local edit in `changes`.
 4. Add `agents/openai.yaml` when the skill targets Codex.
 
+## Update copied skills
+
+Follow [`update-skills`](./.claude/skills/update-skills/SKILL.md) to bring copied skills up to their latest upstream versions.
+
 ## Write for agents and humans
 
 Apply `technical-writing` and `unslop` to every document, commit message, and pull request description. Apply `writing-for-agents` when you change `AGENTS.md` or a skill.
