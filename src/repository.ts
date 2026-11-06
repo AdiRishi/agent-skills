@@ -99,7 +99,10 @@ async function markdownFiles(directory: string): Promise<string[]> {
 	for (const entry of await readdir(directory, { withFileTypes: true })) {
 		if (entry.name === ".git" || entry.name === "node_modules") continue;
 		const path = join(directory, entry.name);
-		if (entry.isDirectory()) files.push(...(await markdownFiles(path)));
+		// A nested checkout, such as a Git worktree, belongs to another working tree.
+		if (entry.isDirectory() && !existsSync(join(path, ".git"))) {
+			files.push(...(await markdownFiles(path)));
+		}
 		else if (entry.isFile() && entry.name.endsWith(".md")) files.push(path);
 	}
 	return files;

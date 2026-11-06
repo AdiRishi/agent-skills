@@ -116,6 +116,14 @@ test("check reports broken relative links outside fenced code", async (t) => {
 	]);
 });
 
+test("check ignores nested checkouts such as Git worktrees", async (t) => {
+	const { root } = await fixture(t);
+	await write(join(root, ".claude", "worktrees", "old", ".git"), "gitdir: elsewhere\n");
+	await write(join(root, ".claude", "worktrees", "old", "README.md"), "[gone](missing.md)\n");
+
+	assert.deepEqual(await checkRepository({ root, config: fixtureConfig }), []);
+});
+
 test("apply installs each skill for its harnesses and writes each harness's instructions", async (t) => {
 	const { root, home } = await fixture(t);
 	await apply({ root, config: fixtureConfig, home, ...quiet });
