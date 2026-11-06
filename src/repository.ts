@@ -24,8 +24,12 @@ export async function checkRepository({ root, config }: { root: string; config: 
 		}
 	}
 
+	const readme = await readFile(join(root, "README.md"), "utf8");
 	for (const name of directories) {
 		issues.push(...(await checkSkill({ root, config, name })));
+		if (!readme.includes(`](skills/${name})`)) {
+			issues.push(`README.md does not list skills/${name}.`);
+		}
 	}
 
 	issues.push(...(await brokenLinks(root)));

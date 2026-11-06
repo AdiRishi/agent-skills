@@ -36,6 +36,7 @@ Skills are model-invoked by default. Make a skill user-invoked only when Adi wan
 2. Add an entry for the skill to `dotagents.config.ts`. Set `harnesses` only when the skill does not use `defaultHarnesses`.
 3. For a skill copied from another repository, copy the upstream folder unchanged first. Set `upstream` to the folder's GitHub tree URL at the copied commit, then describe every local edit in `changes`.
 4. Add `agents/openai.yaml` when the skill targets Codex.
+5. Add the skill to its group in the README's skills tables. For a copied skill from a new author, add the author to the README credits.
 
 ## Update copied skills
 

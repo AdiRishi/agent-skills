@@ -75,6 +75,15 @@ test("check reports skill folders and config entries that do not match", async (
 	assert.ok(issues.some((issue) => issue.includes("lists shared, but skills/shared does not exist")));
 });
 
+test("check reports a skill the README does not list", async (t) => {
+	const { root } = await fixture(t);
+	await write(join(root, "README.md"), "- [shared](skills/shared)\n");
+
+	assert.deepEqual(await checkRepository({ root, config: fixtureConfig }), [
+		"README.md does not list skills/codex-only.",
+	]);
+});
+
 test("check requires Codex metadata that agrees with SKILL.md about model invocation", async (t) => {
 	const { root } = await fixture(t);
 	await write(
