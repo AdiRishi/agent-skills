@@ -99,7 +99,7 @@ To take one skill, copy its folder into your harness's skills directory, such as
 npx skills add AdiRishi/dotagents --skill unslop
 ```
 
-To set up one of my machines, use Node 22.18 or later:
+To set up one of my machines, use Node 26 or later:
 
 ```bash
 git clone https://github.com/AdiRishi/dotagents
