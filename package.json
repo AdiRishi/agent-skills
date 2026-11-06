@@ -1,13 +1,19 @@
 {
-  "name": "@adirishi/agent-skills",
+  "name": "@adirishi/dotagents",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.33.4",
   "scripts": {
-    "check": "node scripts/agent-setup.mjs check --repository-only",
-    "test": "node --test \"test/*.test.mjs\""
+    "check": "node src/cli.ts check",
+    "apply": "node src/cli.ts apply",
+    "typecheck": "tsc",
+    "test": "node --test \"test/*.test.ts\""
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=22.18"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "typescript": "^7.0.2"
   }
 }
