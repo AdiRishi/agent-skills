@@ -8,7 +8,7 @@ This is how I work with coding agents. It holds the rules every agent I run foll
 
 ## The working agreement
 
-Every harness reads [`global/AGENTS.md`](./global/AGENTS.md) as its global instructions. In short:
+Every harness reads [`instructions/base.md`](./instructions/base.md) as its global instructions. In short:
 
 - Build the simplest design that fits the real requirements. Build the complete requested behavior, with no unfinished paths for requirements that might come later.
 - Trust internal types and framework guarantees. Validate only at system boundaries, such as user input and external APIs.
@@ -18,7 +18,7 @@ Every harness reads [`global/AGENTS.md`](./global/AGENTS.md) as its global instr
 - Anything I will read goes through [`unslop`](skills/unslop) first.
 - Commit at reviewable checkpoints. Pushes to an open PR can start paid reviews, so related commits go up together.
 
-Codex also gets [`global/codex.md`](./global/codex.md), which covers its sandbox and browser tools.
+Codex also gets [`instructions/codex.md`](./instructions/codex.md), which covers its sandbox and browser tools.
 
 ## Skills
 
@@ -81,9 +81,18 @@ Skills marked "mine" are written here. The rest are copies of other people's ski
 
 ## How it works
 
+```text
+instructions/        the rules every harness reads, plus harness-specific sections
+skills/              one folder per skill
+cli/src/             the CLI that checks the repository and installs it on a machine
+cli/test/            one test file for each CLI module
+docs/                decisions and assets
+dotagents.config.ts  harnesses, and where each skill installs and came from
+```
+
 [`dotagents.config.ts`](./dotagents.config.ts) declares the harnesses and the harnesses each skill installs into. A typo in a harness name fails the type check.
 
-`node src/cli.ts apply` copies each skill into the skills directory of every harness it targets. Then it writes each harness's instruction file from `global/AGENTS.md` and that harness's optional section. Each installed skill gets a `.dotagents` marker file. A later `apply` uses the marker to remove skills that left the config, and it leaves skills from anywhere else alone.
+`node cli/src/cli.ts apply` copies each skill into the skills directory of every harness it targets. Then it writes each harness's instruction file from `instructions/base.md` and that harness's optional section. Each installed skill gets a `.dotagents` marker file. A later `apply` uses the marker to remove skills that left the config, and it leaves skills from anywhere else alone.
 
 Copied skills have no merge tooling. Some of my edits, such as the `pr-writing` restructure, are too large for a three-way merge to keep, so an agent does the update. Ask Claude Code in this repository to update the skills, and the project's [`update-skills`](./.agents/skills/update-skills/SKILL.md) skill takes it from there.
 
@@ -104,10 +113,10 @@ To set up one of my machines, use Node 26 or later:
 ```bash
 git clone https://github.com/AdiRishi/dotagents
 cd dotagents
-node src/cli.ts apply
+node cli/src/cli.ts apply
 ```
 
-Run `node src/cli.ts check --machine` at any time to compare the machine with the repository. To run fewer harnesses on a machine, list them in `~/.config/dotagents/machine.json`:
+Run `node cli/src/cli.ts check --machine` at any time to compare the machine with the repository. To run fewer harnesses on a machine, list them in `~/.config/dotagents/machine.json`:
 
 ```json
 { "harnesses": ["claude-code", "codex"] }

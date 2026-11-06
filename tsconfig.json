@@ -12,5 +12,5 @@
 		"noEmit": true,
 		"skipLibCheck": true
 	},
-	"include": ["dotagents.config.ts", "src", "test"]
+	"include": ["dotagents.config.ts", "cli"]
 }

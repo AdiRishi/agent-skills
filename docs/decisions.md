@@ -2,6 +2,10 @@
 
 These are the choices that shaped this repository, newest first. Each entry says what changed and why.
 
+## The shared instructions are not named AGENTS.md (November 2026)
+
+The source for every harness's instructions was `global/AGENTS.md`. Codex and Cursor treat an `AGENTS.md` in a subfolder as instructions for that folder, so an agent working under `global/` loaded the source as instructions. The file is now `instructions/base.md`, and the repository's only `AGENTS.md` describes how to work in it.
+
 ## An agent updates copied skills (November 2026)
 
 The setup command used to update copied skills with a three-way Git merge between the old upstream, the new upstream, and the local copy. Some local edits are too large for a merge to keep. The `pr-writing` copy, for example, rebuilds the upstream skill into three sections. The merge tooling and its license records are gone. Each copied skill now records its upstream folder at a commit and a plain description of the local edits. The [`update-skills`](../.agents/skills/update-skills/SKILL.md) skill tells an agent how to bring in upstream changes and keep the intent of those edits.

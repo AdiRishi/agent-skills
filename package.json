@@ -4,10 +4,10 @@
   "type": "module",
   "packageManager": "pnpm@12.18.0",
   "scripts": {
-    "check": "node src/cli.ts check",
-    "apply": "node src/cli.ts apply",
+    "check": "node cli/src/cli.ts check",
+    "apply": "node cli/src/cli.ts apply",
     "typecheck": "tsc",
-    "test": "node --test \"test/*.test.ts\""
+    "test": "node --test \"cli/test/*.test.ts\""
   },
   "engines": {
     "node": ">=26"

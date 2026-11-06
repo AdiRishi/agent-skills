@@ -1,10 +1,10 @@
 import { homedir } from "node:os";
 import { fileURLToPath } from "node:url";
-import config from "../dotagents.config.ts";
+import config from "../../dotagents.config.ts";
 import { apply, checkMachine, machineHarnesses } from "./machine.ts";
 import { checkRepository } from "./repository.ts";
 
-const usage = `Usage: node src/cli.ts <command>
+const usage = `Usage: node cli/src/cli.ts <command>
 
 Commands:
   check              Validate the repository
@@ -12,7 +12,7 @@ Commands:
   apply              Install skills and global instructions on this machine
   apply --dry-run    Print what apply would change`;
 
-const root = fileURLToPath(new URL("..", import.meta.url));
+const root = fileURLToPath(new URL("../..", import.meta.url));
 const home = homedir();
 
 function report(label: string, issues: string[]) {

@@ -1,12 +1,14 @@
 # Working in this repository
 
-This repository holds Adi's agent skills and the global instructions every harness reads. The copies under `~/.claude`, `~/.codex`, and `~/.cursor` are outputs. Change the repository, then run `node src/cli.ts apply`.
+This repository holds Adi's agent skills and the global instructions every harness reads. The copies under `~/.claude`, `~/.codex`, and `~/.cursor` are outputs. Change the repository, then run `node cli/src/cli.ts apply`.
 
 ## Check your work
 
 Run `pnpm check` before you edit. Resolve any failure that affects your task, and preserve unrelated work.
 
 The work is complete when `pnpm check`, `pnpm typecheck`, and `pnpm test` pass.
+
+The CLI lives in `cli/src`. Each module has a test file of the same name in `cli/test`, such as `cli/test/machine.test.ts` for `cli/src/machine.ts`.
 
 [`dotagents.config.ts`](./dotagents.config.ts) declares each harness, the harnesses each skill installs into, and where each copied skill came from. Its types reject a harness name that the config does not declare.
 
@@ -18,9 +20,9 @@ The work is complete when `pnpm check`, `pnpm typecheck`, and `pnpm test` pass.
 
 ## Edit the global instructions
 
-`apply` writes each harness's instruction file from [`global/AGENTS.md`](./global/AGENTS.md) plus the harness's `instructionsSection`, joined by one blank line.
+`apply` writes each harness's instruction file from [`instructions/base.md`](./instructions/base.md) plus the harness's `instructionsSection`, joined by one blank line.
 
-Keep a rule in `global/AGENTS.md` when every harness follows it. Move it to the harness section, such as [`global/codex.md`](./global/codex.md), when it describes one harness's environment, tools, or vocabulary.
+Keep a rule in `instructions/base.md` when every harness follows it. Move it to the harness section, such as [`instructions/codex.md`](./instructions/codex.md), when it describes one harness's environment, tools, or vocabulary.
 
 ## Keep each skill complete
 

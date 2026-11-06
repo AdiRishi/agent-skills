@@ -1,4 +1,4 @@
-import { defineConfig } from "./src/config.ts";
+import { defineConfig } from "./cli/src/config.ts";
 
 const tstack = "https://github.com/t3dotgg/tstack/tree/7de017b3fc9d50c03cf3ecb98fb71e0ca65a78bd";
 const pstack = "https://github.com/cursor/plugins/tree/ab69380dd50ee47d426b35cb8369cffdddafc218/pstack";
@@ -15,7 +15,7 @@ export default defineConfig({
 		codex: {
 			skills: "~/.codex/skills",
 			instructions: "~/.codex/AGENTS.md",
-			instructionsSection: "global/codex.md",
+			instructionsSection: "instructions/codex.md",
 		},
 		cursor: {
 			skills: "~/.cursor/skills",

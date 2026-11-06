@@ -3,7 +3,7 @@ export interface Harness {
 	skills: `~/${string}`;
 	/** The global instruction file the harness reads. */
 	instructions: `~/${string}`;
-	/** A repository file appended to `global/AGENTS.md` for this harness only. */
+	/** A repository file appended to `instructions/base.md` for this harness only. */
 	instructionsSection?: string;
 }
 

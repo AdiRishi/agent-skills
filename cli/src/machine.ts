@@ -47,7 +47,7 @@ export async function machineHarnesses({ config, home }: Omit<Machine, "root">) 
 }
 
 async function targets({ root, config, home }: Machine): Promise<Target[]> {
-	const global = (await readFile(join(root, "global", "AGENTS.md"), "utf8")).trim();
+	const base = (await readFile(join(root, "instructions", "base.md"), "utf8")).trim();
 	const used = await machineHarnesses({ config, home });
 	return Promise.all(
 		Object.entries(config.harnesses)
@@ -63,7 +63,7 @@ async function targets({ root, config, home }: Machine): Promise<Target[]> {
 						.filter(([, skill]) => skillHarnesses(config, skill).includes(name))
 						.map(([skill]) => skill),
 					instructionsPath: expandHome(harness.instructions, home),
-					instructions: `${section ? `${global}\n\n${section}` : global}\n`,
+					instructions: `${section ? `${base}\n\n${section}` : base}\n`,
 				};
 			}),
 	);
