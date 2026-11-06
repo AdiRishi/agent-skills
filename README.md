@@ -85,7 +85,7 @@ Skills marked "mine" are written here. The rest are copies of other people's ski
 
 `node src/cli.ts apply` copies each skill into the skills directory of every harness it targets. Then it writes each harness's instruction file from `global/AGENTS.md` and that harness's optional section. Each installed skill gets a `.dotagents` marker file. A later `apply` uses the marker to remove skills that left the config, and it leaves skills from anywhere else alone.
 
-Copied skills have no merge tooling. Some of my edits, such as the `pr-writing` restructure, are too large for a three-way merge to keep, so an agent does the update. Ask Claude Code in this repository to update the skills, and the project's [`update-skills`](./.claude/skills/update-skills/SKILL.md) skill takes it from there.
+Copied skills have no merge tooling. Some of my edits, such as the `pr-writing` restructure, are too large for a three-way merge to keep, so an agent does the update. Ask Claude Code in this repository to update the skills, and the project's [`update-skills`](./.agents/skills/update-skills/SKILL.md) skill takes it from there.
 
 CI runs `pnpm check`, `pnpm typecheck`, and `pnpm test`. The check confirms that each skill folder has a config entry, that `SKILL.md` and the Codex metadata agree about invocation, that relative links resolve, and that this README lists every skill.
 

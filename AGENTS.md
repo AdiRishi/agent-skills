@@ -40,7 +40,7 @@ Skills are model-invoked by default. Make a skill user-invoked only when Adi wan
 
 ## Update copied skills
 
-Follow [`update-skills`](./.claude/skills/update-skills/SKILL.md) to bring copied skills up to their latest upstream versions.
+Follow [`update-skills`](./.agents/skills/update-skills/SKILL.md) to bring copied skills up to their latest upstream versions.
 
 ## Write for agents and humans
 

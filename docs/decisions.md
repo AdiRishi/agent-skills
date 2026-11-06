@@ -4,7 +4,7 @@ These are the choices that shaped this repository, newest first. Each entry says
 
 ## An agent updates copied skills (November 2026)
 
-The setup command used to update copied skills with a three-way Git merge between the old upstream, the new upstream, and the local copy. Some local edits are too large for a merge to keep. The `pr-writing` copy, for example, rebuilds the upstream skill into three sections. The merge tooling and its license records are gone. Each copied skill now records its upstream folder at a commit and a plain description of the local edits. The [`update-skills`](../.claude/skills/update-skills/SKILL.md) skill tells an agent how to bring in upstream changes and keep the intent of those edits.
+The setup command used to update copied skills with a three-way Git merge between the old upstream, the new upstream, and the local copy. Some local edits are too large for a merge to keep. The `pr-writing` copy, for example, rebuilds the upstream skill into three sections. The merge tooling and its license records are gone. Each copied skill now records its upstream folder at a commit and a plain description of the local edits. The [`update-skills`](../.agents/skills/update-skills/SKILL.md) skill tells an agent how to bring in upstream changes and keep the intent of those edits.
 
 ## Skills install by copy (November 2026)
 
