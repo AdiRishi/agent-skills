@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/icon-128.png" width="96" alt="">
+  <img src="docs/assets/icon.svg" width="96" alt="">
 </p>
 
 # dotagents
