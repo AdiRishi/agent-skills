@@ -86,7 +86,7 @@ instructions/        the rules every harness reads, plus harness-specific sectio
 skills/              one folder per skill
 cli/src/             the CLI that checks the repository and installs it on a machine
 cli/test/            one test file for each CLI module
-docs/                decisions and assets
+docs/assets/         the repository icon
 dotagents.config.ts  harnesses, and where each skill installs and came from
 ```
 
@@ -97,8 +97,6 @@ dotagents.config.ts  harnesses, and where each skill installs and came from
 Copied skills have no merge tooling. Some of my edits, such as the `pr-writing` restructure, are too large for a three-way merge to keep, so an agent does the update. Ask Claude Code in this repository to update the skills, and the project's [`update-skills`](./.agents/skills/update-skills/SKILL.md) skill takes it from there.
 
 CI runs `pnpm check`, `pnpm typecheck`, and `pnpm test`. The check confirms that each skill folder has a config entry, that `SKILL.md` and the Codex metadata agree about invocation, that relative links resolve, and that this README lists every skill.
-
-[`docs/decisions.md`](./docs/decisions.md) records what I tried, removed, or changed, and why.
 
 ## Use it
 
