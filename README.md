@@ -1,84 +1,135 @@
 <p align="center">
-  <img src="docs/assets/agent-skills-icon-128.png" width="96" alt="Agent Skills">
+  <img src="docs/assets/icon.svg" width="96" alt="">
 </p>
 
-# Agent setup
+# dotagents
 
-This repository defines the skills and global instructions that Adi's coding agents use. It can inspect a Mac or a Windows machine, apply the declared setup, and update skills copied from upstream repositories.
+This is how I work with coding agents. It holds the rules every agent I run follows, the skills they load, and a small TypeScript CLI that installs both on each of my machines. Claude Code, Codex, and Cursor all start from this repository.
 
-## Set up a machine
+## The working agreement
 
-The setup command needs Node 22 or later and Git. Clone the repository, then apply the current checkout:
+Every harness reads [`instructions/base.md`](./instructions/base.md) as its global instructions. In short:
 
-```bash
-git clone https://github.com/AdiRishi/agent-skills
-cd agent-skills
-node scripts/agent-setup.mjs apply
+- Build the simplest design that fits the real requirements. Build the complete requested behavior, with no unfinished paths for requirements that might come later.
+- Trust internal types and framework guarantees. Validate only at system boundaries, such as user input and external APIs.
+- Delete code that is certainly unused. No renamed `_variables`, compatibility shims, or `removed` comments.
+- A test protects an outcome a caller cares about and still passes after an internal refactor. No mock call counts, and no expected values computed with the implementation's own logic.
+- Comments explain only what the code cannot show, such as a hidden constraint or a workaround.
+- Anything I will read goes through [`unslop`](skills/unslop) first.
+- Commit at reviewable checkpoints. Pushes to an open PR can start paid reviews, so related commits go up together.
+
+Codex also gets [`instructions/codex.md`](./instructions/codex.md), which covers its sandbox and browser tools.
+
+## Skills
+
+Skills marked "mine" are written here. The rest are copies of other people's skills, and "edited" means I changed more than the Codex metadata. [`dotagents.config.ts`](./dotagents.config.ts) links each copy to its upstream folder and describes my edits.
+
+### Plan and design
+
+| Skill | What it does | From |
+| --- | --- | --- |
+| [grilling](skills/grilling) | Questions me about a plan or decision until every branch is settled. | Matt Pocock |
+| [wayfinder](skills/wayfinder) | Plans work too large for one agent session as decision tickets on the issue tracker, then resolves them one at a time. | Matt Pocock |
+| [codebase-design](skills/codebase-design) | Gives a shared vocabulary for designing deep modules and deciding where seams go. | Matt Pocock |
+| [engineering-principles](skills/engineering-principles) | Indexes 24 engineering principles, such as "fix root causes" and "subtract before you add", and loads each one only when it applies. | Mine, with pstack's principles |
+
+### Build
+
+| Skill | What it does | From |
+| --- | --- | --- |
+| [typescript-best-practices](skills/typescript-best-practices) | Applies TypeScript rules whenever an agent reads or edits a `.ts` file: discriminated unions, branded types, and no `as` casts. | pstack, edited |
+| [frontend-design](skills/frontend-design) | Sets a visual direction and typography for new UI so it does not look templated. | Anthropic |
+| [game-development](skills/game-development) | Builds a game through visual direction and play, where I judge how it feels. Codex only. | Mine |
+| [typesafe-ai](skills/typesafe-ai) | Replaces prompt-and-parse steps with TypeSafe's typed AI judgments. | TypeSafe AI |
+| [cf-cli](skills/cf-cli) | Runs Cloudflare's `cf` CLI for DNS, Workers, D1, KV, and R2. | Cloudflare |
+
+### Coordinate agents
+
+| Skill | What it does | From |
+| --- | --- | --- |
+| [orchestrate-claude](skills/orchestrate-claude) | Runs Claude subagents with clear ownership and an explicit model and effort for each one. | Mine |
+| [orchestrate-codex](skills/orchestrate-codex) | Runs Codex subagents with clear ownership on the current thread's model. | Mine |
+
+### Verify
+
+| Skill | What it does | From |
+| --- | --- | --- |
+| [create-verification-skill](skills/create-verification-skill) | Generates a project skill that drives the app the way a user does. | pstack, edited |
+| [maintain-verification-skill](skills/maintain-verification-skill) | Keeps that skill and its feature map accurate as the app changes. | pstack, edited |
+| [create-formal-verification-skill](skills/create-formal-verification-skill) | Generates a project skill that formally verifies the code where a bug costs the most and tests reach the least. | pstack |
+| [maintain-formal-verification-skill](skills/maintain-formal-verification-skill) | Updates the formal models after the verified code changes. | pstack |
+| [statechart](skills/statechart) | Draws a system's states as a Mermaid statechart from a TLA+ model, with each bug as a numbered path. | pstack |
+
+### Review and ship
+
+| Skill | What it does | From |
+| --- | --- | --- |
+| [claude-code-review](skills/claude-code-review) | Runs Claude Code's review, checks each finding against the code and my intent, and fixes the findings that hold up. | Mine |
+| [file-pr](skills/file-pr) | Files a concise pull request. | Theo Browne, edited |
+| [pr-writing](skills/pr-writing) | Writes a PR description: a short opening, optional reviewer details, and evidence. | HugoRCD, edited |
+| [babysit-pr](skills/babysit-pr) | Watches a pull request through review and CI. | Theo Browne |
+| [leaving-pr-comments](skills/leaving-pr-comments) | Sets the rules for comments on GitHub. | Theo Browne |
+
+### Write and explain
+
+| Skill | What it does | From |
+| --- | --- | --- |
+| [unslop](skills/unslop) | Removes AI writing patterns. Every harness loads it before writing anything I read. | pstack, edited |
+| [technical-writing](skills/technical-writing) | Applies a layered standard: Diátaxis, Google developer style, Simplified Technical English, and Global English. | pstack, edited |
+| [writing-for-agents](skills/writing-for-agents) | Shows how to write skills and `AGENTS.md` files that an agent follows the same way on every run. | Matt Pocock |
+| [walk-me-through](skills/walk-me-through) | Explains work I could not follow so that I understand it on the first read. | Mine |
+
+## How it works
+
+```text
+instructions/        the rules every harness reads, plus harness-specific sections
+skills/              one folder per skill
+cli/src/             the CLI that checks the repository and installs it on a machine
+cli/test/            one test file for each CLI module
+docs/assets/         the repository icon
+dotagents.config.ts  harnesses, and where each skill installs and came from
 ```
 
-`apply` installs each skill into its declared harness, repairs declared integrations, copies the global instruction file, removes misplaced managed skills, and checks the result. It does not store credentials or complete an interactive sign-in.
+[`dotagents.config.ts`](./dotagents.config.ts) declares the harnesses and the harnesses each skill installs into. A typo in a harness name fails the type check.
 
-Run the machine check again at any time:
+`node cli/src/cli.ts apply` copies each skill into the skills directory of every harness it targets. Then it writes each harness's instruction file from `instructions/base.md` and that harness's optional section. Each installed skill gets a `.dotagents` marker file. A later `apply` uses the marker to remove skills that left the config, and it leaves skills from anywhere else alone.
+
+Copied skills have no merge tooling. Some of my edits, such as the `pr-writing` restructure, are too large for a three-way merge to keep, so an agent does the update. Ask Claude Code in this repository to update the skills, and the project's [`update-skills`](./.agents/skills/update-skills/SKILL.md) skill takes it from there.
+
+CI runs `pnpm check`, `pnpm typecheck`, and `pnpm test`. The check confirms that each skill folder has a config entry, that `SKILL.md` and the Codex metadata agree about invocation, that relative links resolve, and that this README lists every skill.
+
+## Use it
+
+To take one skill, copy its folder into your harness's skills directory, such as `~/.claude/skills/unslop`, or use the [`skills`](https://github.com/vercel-labs/skills) CLI:
 
 ```bash
-node scripts/agent-setup.mjs check --machine
+npx skills add AdiRishi/dotagents --skill unslop
 ```
 
-On Windows, run the same commands from PowerShell or Git Bash. Unless symlinks are enabled, Git for Windows checks `CLAUDE.md` out as a plain file that holds the text `AGENTS.md`. The repository check accepts that file on Windows.
+To set up one of my machines, use Node 26 or later:
 
-## Choose the harnesses a machine runs
+```bash
+git clone https://github.com/AdiRishi/dotagents
+cd dotagents
+node cli/src/cli.ts apply
+```
 
-By default, `apply` and `check --machine` manage every harness in `agent-setup.json` and run each harness's `check` command. To manage fewer harnesses on a machine, list them in `~/.config/agent-skills/machine.json`, next to the state file:
+Run `node cli/src/cli.ts check --machine` at any time to compare the machine with the repository. To run fewer harnesses on a machine, list them in `~/.config/dotagents/machine.json`:
 
 ```json
-{
-	"harnesses": ["claude-code", "codex"],
-	"skipHarnessChecks": ["codex"]
-}
+{ "harnesses": ["claude-code", "codex"] }
 ```
 
-- `harnesses` names the harnesses this machine runs. `apply` installs skills and global instructions for these harnesses only. It skips a skill that targets none of them and leaves the files of other harnesses alone.
-- `skipHarnessChecks` names harnesses whose `check` command does not run. Use it for a harness installed without its command-line tool, such as the Codex desktop app on Windows.
+## Credits
 
-The file belongs to the machine. The repository does not track it.
+This repository includes skills from:
 
-## Work with the repository
+- [Anthropic](https://github.com/anthropics/skills)
+- [Cloudflare](https://github.com/cloudflare/skills)
+- [HugoRCD](https://github.com/HugoRCD/hr-folio)
+- [Lauren Tan](https://github.com/cursor/plugins/tree/main/pstack), through pstack
+- [Matt Pocock](https://github.com/mattpocock/skills)
+- [Theo Browne](https://github.com/t3dotgg/tstack), through tstack
+- [TypeSafe AI](https://github.com/typesafe-ai/skills)
 
-The setup command has three operations:
-
-```bash
-# Validate repository structure and metadata.
-node scripts/agent-setup.mjs check --repository-only
-
-# Make this machine match the current checkout.
-node scripts/agent-setup.mjs apply
-
-# Fetch and merge every vendored skill from its declared upstream.
-node scripts/agent-setup.mjs update
-```
-
-`apply --dry-run` prints the install and copy operations. `update --dry-run` fetches upstream repositories and reports what would change.
-
-## What the repository owns
-
-[`agent-setup.json`](./agent-setup.json) is the source of truth. It declares:
-
-- the supported harnesses and their instruction paths
-- each skill's installation targets
-- the pinned `skills` installer version
-- upstream repositories, commits, local files, and merge notes
-
-The remaining files supply the declared content:
-
-- [`skills/`](./skills) contains custom and vendored skills.
-- [`global/AGENTS.md`](./global/AGENTS.md) contains the global instructions every harness receives, and [`global/codex.md`](./global/codex.md) contains the section only Codex receives. Cursor has no extra section yet. `apply` still writes [`global/AGENTS.md`](./global/AGENTS.md) to `~/.cursor/AGENTS.md`.
-- [`licenses/`](./licenses) preserves the notices for vendored work.
-- [`AGENTS.md`](./AGENTS.md) tells an agent how to maintain the repository.
-
-Installed files are outputs. Edit this repository, then run `apply`. Do not edit the copies under `~/.agents`, `~/.claude`, `~/.codex`, or `~/.cursor` and expect the repository to import them.
-
-## Credit and license
-
-The repository includes work by [Anthropic](https://github.com/anthropics/skills), [Cloudflare](https://github.com/cloudflare/skills), [Lauren Tan](https://github.com/cursor/plugins/tree/main/pstack), and [Matt Pocock](https://github.com/mattpocock/skills). Their source, commit, and license records live in [`agent-setup.json`](./agent-setup.json), and their license notices live in [`licenses/`](./licenses).
-
-Adi's custom skills use the repository's [MIT license](./LICENSE). Vendored files retain their upstream licenses.
+Thank you all. My own skills and code use the [MIT license](./LICENSE).
