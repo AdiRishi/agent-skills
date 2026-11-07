@@ -1,6 +1,6 @@
 import { defineConfig } from "./cli/src/config.ts";
 
-const tstack = "https://github.com/t3dotgg/tstack/tree/7de017b3fc9d50c03cf3ecb98fb71e0ca65a78bd";
+const tstack = "https://github.com/t3dotgg/tstack/tree/1085050f3baed1ac724caa4a8166145fb2ac88af";
 const pstack = "https://github.com/cursor/plugins/tree/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack";
 const mattpocock = "https://github.com/mattpocock/skills/tree/4ae2317ddb22b046e26455e4f9c9b3aaaf62212d";
 const addedCodexMetadata = "Added agents/openai.yaml.";
@@ -38,6 +38,10 @@ export default defineConfig({
 		},
 		"codebase-design": {
 			upstream: `${mattpocock}/skills/engineering/codebase-design`,
+		},
+		council: {
+			upstream: `${tstack}/skills/council`,
+			changes: addedCodexMetadata,
 		},
 		"create-formal-verification-skill": {
 			upstream: `${pstack}/skills/create-formal-verification-skill`,
