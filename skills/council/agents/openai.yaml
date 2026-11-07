@@ -1,3 +1,3 @@
 interface:
   display_name: "Council"
-  short_description: "Get review from three delegates on different providers"
+  short_description: "Get review from delegates on different providers"

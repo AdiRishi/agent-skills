@@ -41,7 +41,7 @@ export default defineConfig({
 		},
 		council: {
 			upstream: `${tstack}/skills/council`,
-			changes: addedCodexMetadata,
+			changes: `Brings in two delegates by default, Claude Opus and GPT Sol, instead of three. Members the user names replace the default, in any number. ${addedCodexMetadata}`,
 		},
 		"create-formal-verification-skill": {
 			upstream: `${pstack}/skills/create-formal-verification-skill`,
