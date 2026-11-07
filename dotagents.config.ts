@@ -1,9 +1,8 @@
 import { defineConfig } from "./cli/src/config.ts";
 
 const tstack = "https://github.com/t3dotgg/tstack/tree/7de017b3fc9d50c03cf3ecb98fb71e0ca65a78bd";
-const pstack = "https://github.com/cursor/plugins/tree/ab69380dd50ee47d426b35cb8369cffdddafc218/pstack";
-const pstackWriting = "https://github.com/cursor/plugins/tree/4382e687a50b8d2c5ce4d141d001186589cff8d5/pstack";
-const mattpocock = "https://github.com/mattpocock/skills/tree/49dd158d1076134a641b33efb035946536778336";
+const pstack = "https://github.com/cursor/plugins/tree/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack";
+const mattpocock = "https://github.com/mattpocock/skills/tree/4ae2317ddb22b046e26455e4f9c9b3aaaf62212d";
 const addedCodexMetadata = "Added agents/openai.yaml.";
 
 export default defineConfig({
@@ -51,7 +50,7 @@ export default defineConfig({
 		"engineering-principles": {
 			upstream: `${pstack}/skills`,
 			changes:
-				"Combines pstack's principle-* skills and benchmark-checklist into one skill. Each references/<name>.md is an unchanged copy of pstack/skills/<name>/SKILL.md. SKILL.md, the index that says when each principle applies, and agents/openai.yaml are written here.",
+				"Combines pstack's principle-* skills and benchmark-checklist into one skill. Each references/<name>.md is a copy of pstack/skills/<name>/SKILL.md. Links to other principles point to their reference files, and mentions of pstack skills and playbooks that this repository does not have are removed. SKILL.md, the index that says when each principle applies, and agents/openai.yaml are written here.",
 		},
 		"file-pr": {
 			harnesses: ["claude-code", "codex", "cursor"],
@@ -98,20 +97,20 @@ export default defineConfig({
 			changes: addedCodexMetadata,
 		},
 		"technical-writing": {
-			upstream: `${pstackWriting}/skills/technical-writing`,
+			upstream: `${pstack}/skills/technical-writing`,
 			changes: `Removed disable-model-invocation so the model can invoke the skill. ${addedCodexMetadata}`,
 		},
 		"typesafe-ai": {
 			upstream:
-				"https://github.com/typesafe-ai/skills/tree/65a39f393687675ce170e6094757de20370365b9/skills/typesafe-ai",
+				"https://github.com/typesafe-ai/skills/tree/302eea662c54bca6730873fe245bec1d69ebc23d/skills/typesafe-ai",
 			changes: addedCodexMetadata,
 		},
 		"typescript-best-practices": {
-			upstream: `${pstackWriting}/skills/typescript-best-practices`,
+			upstream: `${pstack}/skills/typescript-best-practices`,
 			changes: `Removed disable-model-invocation so the model can invoke the skill. References to standalone pstack principle skills point to the reference files in engineering-principles instead. ${addedCodexMetadata}`,
 		},
 		unslop: {
-			upstream: `${pstackWriting}/skills/unslop`,
+			upstream: `${pstack}/skills/unslop`,
 			changes: `Removed disable-model-invocation so the model can invoke the skill. The description keeps "Must always apply." so the model loads the skill for all writing. Upstream dropped that sentence in bc697d0. ${addedCodexMetadata}`,
 		},
 		"walk-me-through": {},

@@ -58,7 +58,7 @@ Skills marked "mine" are written here. The rest are copies of other people's ski
 | [maintain-verification-skill](skills/maintain-verification-skill) | Keeps that skill and its feature map accurate as the app changes. | pstack, edited |
 | [create-formal-verification-skill](skills/create-formal-verification-skill) | Generates a project skill that formally verifies the code where a bug costs the most and tests reach the least. | pstack |
 | [maintain-formal-verification-skill](skills/maintain-formal-verification-skill) | Updates the formal models after the verified code changes. | pstack |
-| [statechart](skills/statechart) | Draws a system's states as a Mermaid statechart from a TLA+ model, with each bug as a numbered path. | pstack |
+| [statechart](skills/statechart) | Checks a TLA+ model and draws it as a Mermaid statechart, with the shortest path to each state that breaks a rule. | pstack |
 
 ### Review and ship
 
