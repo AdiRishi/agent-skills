@@ -3,7 +3,7 @@ import { defineConfig } from "./cli/src/config.ts";
 const tstack = "https://github.com/t3dotgg/tstack/tree/7de017b3fc9d50c03cf3ecb98fb71e0ca65a78bd";
 const pstack = "https://github.com/cursor/plugins/tree/ab69380dd50ee47d426b35cb8369cffdddafc218/pstack";
 const pstackWriting = "https://github.com/cursor/plugins/tree/4382e687a50b8d2c5ce4d141d001186589cff8d5/pstack";
-const mattpocock = "https://github.com/mattpocock/skills/tree/49dd158d1076134a641b33efb035946536778336";
+const mattpocock = "https://github.com/mattpocock/skills/tree/4ae2317ddb22b046e26455e4f9c9b3aaaf62212d";
 const addedCodexMetadata = "Added agents/openai.yaml.";
 
 export default defineConfig({
