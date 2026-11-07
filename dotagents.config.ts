@@ -102,7 +102,7 @@ export default defineConfig({
 		},
 		"typesafe-ai": {
 			upstream:
-				"https://github.com/typesafe-ai/skills/tree/65a39f393687675ce170e6094757de20370365b9/skills/typesafe-ai",
+				"https://github.com/typesafe-ai/skills/tree/302eea662c54bca6730873fe245bec1d69ebc23d/skills/typesafe-ai",
 			changes: addedCodexMetadata,
 		},
 		"typescript-best-practices": {
